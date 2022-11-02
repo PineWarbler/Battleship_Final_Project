@@ -2,10 +2,10 @@
 
 GUI implementation of battleship board game.  Final project for COMP 220 F2022.
 
-To-Do List:
+To-Do List (or preferred: create an issue on GitHub):
 - [ ] task 1
 - [x] task 2
 
-## License
+### License
 
-[MIT License](LICENSE)
+[MIT License](LICENSE.md)
