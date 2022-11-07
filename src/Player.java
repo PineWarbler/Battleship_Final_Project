@@ -10,8 +10,9 @@ public class Player {
         this.name = name;
     }
 
-    public Player(String name, LowerBoard lowerBoard, HitOrMissHistoryBoard upperBoard){
-        // TODO: complete this constructor
+
+    public Player(String name, LowerBoard lowerBoard, HitOrMissHistoryBoard upperBoard, int health){
+        // TODO: complete this constructor.  Make sure to call this.getHealth to set the health value
     }
 
     public boolean hasLost(){
@@ -45,10 +46,6 @@ public class Player {
         this.upperBoard = upperBoard;
     }
 
-    public void setHealth(int health) {
-        // TODO: loop through ships on board and return sum of their healths
-    }
-
     public String getName() {
         return name;
     }
@@ -58,6 +55,6 @@ public class Player {
     }
 
     public int getHealth() {
-        return health;
+        return this.lowerBoard.getHealth();
     }
 }

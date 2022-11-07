@@ -59,4 +59,15 @@ public class ShipBoard extends Board {
         }
         return cellStatus.MISS;
     }
+
+    /**
+     * @return the sum healths of the ships on the board
+     */
+    public int getHealth(){
+        int healthSum = 0;
+        for(Ship ship : shipList){
+            healthSum += ship.getHealth();
+        }
+        return healthSum;
+    }
 }

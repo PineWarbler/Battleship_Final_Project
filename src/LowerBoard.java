@@ -30,4 +30,8 @@ public class LowerBoard {
     public void placeShip(int[][] coord, Ship ship){
         // TODO: should call shipBoard.insertShip
     }
+
+    public int getHealth(){
+        return this.shipBoard.getHealth();
+    }
 }

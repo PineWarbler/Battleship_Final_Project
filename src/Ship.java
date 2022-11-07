@@ -11,6 +11,10 @@ public class Ship {
         this.health--;
     }
 
+    public int getHealth(){
+        return this.health;
+    }
+
 
     public int getHashID(){
         // TODO: complete this method. (Hint: should be similar to hashCode())
