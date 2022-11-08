@@ -31,7 +31,7 @@ public class ShipBoard extends Board {
     }
 
     public boolean isShip(int[][] coord){
-        return this.hashArray[coord[0][1]][coord[0][1]] != emptyHash;
+        return this.hashArray[coord[0][0]][coord[0][1]] != emptyHash;
     }
 
 
