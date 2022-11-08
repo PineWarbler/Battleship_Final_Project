@@ -23,7 +23,7 @@ public class Player {
      * marks the {@link #upperBoard} with response from other player about whether this player's coord guess hit other player's ship
      * @param coord the coordinate of the guess
      */
-    public void processResponseFromOtherPlayer(int[][] coord, cellStatus responseStatus){
+    public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatus){
         // TODO: complete this method according to the Javadoc above
         // hint: should call this.upperBoard.markAsHit/markAsMissed depending on `responseStatus`
     }
@@ -33,7 +33,7 @@ public class Player {
      * @param coord is the guessed coordinate
      * @return whether the coord is a hit or a miss <b>(should not return `NONE` enum type!)</b>
      */
-    public cellStatus processRequestFromOtherPlayer(int[][] coord){
+    public cellStatus processRequestFromOtherPlayer(int[] coord){
         return this.lowerBoard.processIncomingGuess(coord);
     }
 

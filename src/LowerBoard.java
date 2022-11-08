@@ -16,7 +16,7 @@ public class LowerBoard {
      * @param coord
      * @return whether cell is a hit or not
      */
-    public cellStatus processIncomingGuess(int[][] coord) {
+    public cellStatus processIncomingGuess(int[] coord) {
         // TODO: complete this method according to the Javadoc above
         // should call shipBoard.processIncomingGuess and
         // should call histBoard.markAsHit/markAsMiss depending on output of shipBoard.isShip()
@@ -27,7 +27,7 @@ public class LowerBoard {
      * @param coord coordinates of points which the
      * @param ship the ship to be placed
      */
-    public void placeShip(int[][] coord, Ship ship){
+    public void placeShip(int[] coord, Ship ship){
         // TODO: should call shipBoard.insertShip
     }
 

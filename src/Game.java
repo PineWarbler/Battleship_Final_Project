@@ -7,7 +7,7 @@ public class Game {
         // I'm not sure to what extent this method will be tied to the GUI class
     }
 
-    public int[][] getUsersGuess(){
+    public int[] getUsersGuess(){
         // via GUI?
     }
 
@@ -22,7 +22,7 @@ public class Game {
         // get opening ship positions for both
         while(!p1.hasLost() && !p2.hasLost()){
 
-            int[][] currPlayersGuess = getUsersGuess();
+            int[] currPlayersGuess = getUsersGuess();
             cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
             askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
 

@@ -7,11 +7,11 @@ public class HitOrMissHistoryBoard extends Board {
         // TODO: fill all elements of `cellStatuses` with cellStatus enum type `NONE`
     }
     @Override
-    public void markAsHit(int[][] coord){
+    public void markAsHit(int[] coord){
         // TODO: change the correct cellStatus element to cellStatus enum type `HIT`
     }
 
-    public void markAsMissed(int[][] coord){
+    public void markAsMissed(int[] coord){
         // TODO: change the correct cellStatus element to cellStatus enum type `MISS`
     }
 

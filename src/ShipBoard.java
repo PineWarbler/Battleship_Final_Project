@@ -26,12 +26,12 @@ public class ShipBoard extends Board {
     }
 
     @Override
-    public void markAsHit(int[][] coord) {
+    public void markAsHit(int[] coord) {
         // TODO: complete this method. decrement health of the ship at `coord` if hit.
     }
 
-    public boolean isShip(int[][] coord){
-        return this.hashArray[coord[0][0]][coord[0][1]] != emptyHash;
+    public boolean isShip(int[] coord){
+        return this.hashArray[coord[0]][coord[1]] != emptyHash;
     }
 
 
@@ -50,10 +50,10 @@ public class ShipBoard extends Board {
      * Decrements the health of a ship if it's hit and return "HIT".  Otherwise, return "MISS".
      * @param coord coordinate of guess
      */
-    public cellStatus processIncomingGuess(int[][] coord){
+    public cellStatus processIncomingGuess(int[] coord){
         if(isShip(coord)) {
             // don't need a try/catch block here because `if` statement excludes the exception
-            Ship shipAtCoord = identifyShip(this.hashArray[coord[0][1]][coord[0][1]]);
+            Ship shipAtCoord = identifyShip(this.hashArray[coord[0]][coord[1]]);
             shipAtCoord.decrementHealth();
             return cellStatus.HIT;
         }
