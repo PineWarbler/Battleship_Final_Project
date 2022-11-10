@@ -20,9 +20,20 @@ public class ShipBoard extends Board {
      * Inserts a ship into board by placing its hashes into {@link #hashArray}
      * @param occupancyCoords a 2D array of zero-based-indexed board coordinates which a single ship occupies
      * @param ship the ship to be inserted
+     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
      */
-    public void insertShip(int[][] occupancyCoords, Ship ship){
+    public void insertShip(int[][] occupancyCoords, Ship ship) throws IllegalArgumentException {
         // TODO: complete this method, being sure to call ship's getHashID method!
+    }
+
+    /**
+     * Inserts a ship into board by placing its hashes into {@link #hashArray}
+     * @param startCoord either the bow or stern coord
+     * @param direction options: 'N', 'S', 'E', 'W' like compass direction; direction in which rest of ship lies relative to the {@code startCoord}
+     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
+     */
+    public void insertShip(int[] startCoord, char direction, Ship ship) throws IllegalArgumentException {
+        // TODO: complete this method
     }
 
     @Override

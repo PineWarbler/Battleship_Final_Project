@@ -2,6 +2,7 @@ public class LowerBoard {
     // `LowerBoard` has both a `HitOrMissHistoryBoard` and a `ShipBoard`.
     // Analogous to real-life game setup.
 
+    private static final int edgeSize = 10;
     private HitOrMissHistoryBoard histBoard;
     private ShipBoard shipBoard;
 
