@@ -1,7 +1,7 @@
 public class Ship {
     private int health; // how many segments of ship are not hit
     private int length; // how many segments ship occupies
-    int[][] bowCoord, sternCoord; // these are necessary to determine the direction in which the ship is pointed (could be one of two directions)
+    int[] bowCoord, sternCoord; // these are necessary to determine the direction in which the ship is pointed (could be one of two directions)
 
     public Ship(int length){
         // TODO: complete this constructor by initializing `health`, `length`, and coord matrices
@@ -29,11 +29,11 @@ public class Ship {
         // TODO: complete this method according to Javadoc above
     }
 
-    public int[][] getBowCoord() {
+    public int[] getBowCoord() {
         return this.bowCoord;
     }
 
-    public int[][] getSternCoord() {
+    public int[] getSternCoord() {
         return this.sternCoord;
     }
 
