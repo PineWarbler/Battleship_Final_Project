@@ -14,6 +14,11 @@ public class ShipBoard extends Board {
         super(edgeSize);
         this.shipList = new ArrayList<>();
         hashArray = new int[edgeSize][edgeSize];
+        this.initializeAsEmpty(hashArray);
+    }
+
+    public void initializeAsEmpty(int[][] ha){
+        // TODO: initialize all cells in board to be empty hashes
     }
 
     /**
