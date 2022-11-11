@@ -27,6 +27,7 @@ public class HitOrMissHistoryBoard extends Board {
 
     }
 
+
     public void markAsMissed(int[] coord){
         // TODO: change the correct cellStatus element to cellStatus enum type `MISS`
         //weir - assumes normal indexing system

@@ -21,6 +21,8 @@ public class Ship {
 
 
     public int getHashID(){
+        //TODO: Sabella
+
         // TODO: complete this method. (Hint: should be similar to hashCode())
 
         return 1;
@@ -32,6 +34,8 @@ public class Ship {
      * @return True if otherHashID equals this ship's hashID; False otherwise
      */
     public boolean compareHashID(int otherHashID){
+        //TODO: Sabella
+
         // TODO: complete this method according to Javadoc above
 
         return true;

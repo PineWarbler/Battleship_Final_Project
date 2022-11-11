@@ -7,8 +7,22 @@ public class Game {
         // I'm not sure to what extent this method will be tied to the GUI class
     }
 
+    /**
+     * Gets the user input from console or gui
+     * @return int[] of coordinates on grid
+     */
     public int[] getUsersGuess(){
+        //TODO: JON
+
+
         // via GUI?
+
+
+        //Prompt in console
+        //Scan
+        //"A6"
+        //int[] (Map)
+
         return null;
     }
 
