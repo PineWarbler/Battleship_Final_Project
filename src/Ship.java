@@ -5,6 +5,11 @@ public class Ship {
 
     public Ship(int length){
         // TODO: complete this constructor by initializing `health`, `length`, and coord matrices
+        this.health = health;
+        this.length = length;
+        bowCoord = new int [length];
+        sternCoord = new int[length];
+
     }
 
     public void decrementHealth(){
