@@ -3,12 +3,12 @@ public class Ship {
     private int length; // how many segments ship occupies
     int[] bowCoord, sternCoord; // these are necessary to determine the direction in which the ship is pointed (could be one of two directions)
 
-    public Ship(int length){
+    public Ship(int length,int[] bowCoord, int[] sternCoord){
         // TODO: complete this constructor by initializing `health`, `length`, and coord matrices
-        this.health = health;
+        this.health = length;
         this.length = length;
-        bowCoord = new int [length];
-        sternCoord = new int[length];
+        this.bowCoord = bowCoord;
+        this.sternCoord = sternCoord;
 
     }
 
