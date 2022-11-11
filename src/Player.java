@@ -1,17 +1,18 @@
 public class Player {
 
-    private String name;
-    private int health;
+    protected String name;
+    protected int health;
 
-    private LowerBoard lowerBoard;
-    private HitOrMissHistoryBoard upperBoard;
+    protected LowerBoard lowerBoard;
+    protected HitOrMissHistoryBoard upperBoard;
+
 
     public Player(String name){
+
         this.name = name;
-    }
+        this.health = 16;
+        //make an empty lowerBoard and upperBoard by calling their constructors
 
-
-    public Player(String name, LowerBoard lowerBoard, HitOrMissHistoryBoard upperBoard, int health){
         //TODO: Corn
 
         // TODO: complete this constructor.  Make sure to call this.getHealth to set the health value
