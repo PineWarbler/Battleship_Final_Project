@@ -9,7 +9,6 @@ public class Ship {
         this.length = length;
         this.bowCoord = bowCoord;
         this.sternCoord = sternCoord;
-
     }
 
     public void decrementHealth(){
