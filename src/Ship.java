@@ -23,6 +23,8 @@ public class Ship {
 
     public int getHashID(){
         // TODO: complete this method. (Hint: should be similar to hashCode())
+
+        return 1;
     }
 
     /**
@@ -32,6 +34,8 @@ public class Ship {
      */
     public boolean compareHashID(int otherHashID){
         // TODO: complete this method according to Javadoc above
+
+        return true;
     }
 
     public int[] getBowCoord() {

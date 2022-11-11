@@ -9,6 +9,7 @@ public class Game {
 
     public int[] getUsersGuess(){
         // via GUI?
+        return null;
     }
 
 

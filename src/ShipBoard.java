@@ -6,7 +6,7 @@ import java.util.ArrayList;
  */
 public class ShipBoard extends Board {
     private ArrayList<Ship> shipList;
-    private int[][] hashArray; // used to store hashes of ships in a grid pattern
+    protected int[][] hashArray; // used to store hashes of ships in a grid pattern
 
     private static final int emptyHash = 17; // should be prime.  Hash of an empty cell
 
@@ -55,6 +55,9 @@ public class ShipBoard extends Board {
     public Ship identifyShip(int hashID) throws IllegalArgumentException{
         // TODO: complete this method according to the Javadoc above
         // hint: should call isShip for efficiency
+
+
+        return null;
     }
 
     /**
@@ -81,4 +84,68 @@ public class ShipBoard extends Board {
         }
         return healthSum;
     }
+
+
+    @Override
+    public void printBoard() {
+        // weir
+
+        int top = 1;
+        int side = 65;
+        for(int i = 0; i<super.edgeSize+1;i++){
+            StringBuilder sb = new StringBuilder();
+
+            if(i==0){
+                sb.append(" ");
+                sb.append(" | ");
+                for(int j=1;j<super.edgeSize+1;j++){
+                    if(j<10){
+                        sb.append(top);
+                        top++;
+                        if (j != super.edgeSize) {
+                            sb.append(" | ");
+                        }
+                    }else{
+                        sb.append(top);
+                        top++;
+                        if (j != super.edgeSize) {
+                            sb.append("| ");
+                        }
+                    }
+                }
+            }
+            else {
+
+
+                sb.append((char) side);
+                sb.append(" | ");
+                side++;
+
+
+                for (int j = 1; j < super.edgeSize+1; j++) {
+
+
+                    if(this.hashArray[i-1][j-1]!=0){
+                        sb.append("\u001B[47m"+"\u001B[1m" + "⬜"+ "\033[0m");
+                    }
+                    else{
+                        sb.append(" ");
+                    }
+                    if (j != super.edgeSize ) {
+                        sb.append(" | ");
+                    }
+
+                }
+            }
+            System.out.println(sb);
+            System.out.print("——————");
+            for(int k = 1;k<super.edgeSize;k++){
+                System.out.print("————");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+
+
 }

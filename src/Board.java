@@ -1,6 +1,6 @@
 public abstract class Board {
 
-    private final int edgeSize;
+    protected final int edgeSize;
 
     public Board(int edgeSize){
         this.edgeSize = edgeSize;
@@ -10,4 +10,5 @@ public abstract class Board {
     public abstract void markAsHit(int[] coord);
     // don't need to have markAsMissed here because ShipBoard does not keep track of misses; only hits (for which it decrements ship health)
 
+    public abstract void printBoard();
 }
