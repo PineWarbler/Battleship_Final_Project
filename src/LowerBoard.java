@@ -2,7 +2,7 @@ public class LowerBoard {
     // `LowerBoard` has both a `HitOrMissHistoryBoard` and a `ShipBoard`.
     // Analogous to real-life game setup.
 
-    private static int edgeSize = 0;
+    private static int edgeSize;
     private HitOrMissHistoryBoard histBoard;
     private ShipBoard shipBoard;
 
@@ -22,6 +22,7 @@ public class LowerBoard {
      * @return whether cell is a hit or not
      */
     public cellStatus processIncomingGuess(int[] coord) {
+        //TODO: Jon
         // TODO: complete this method according to the Javadoc above
         // should call shipBoard.processIncomingGuess and
         // should call histBoard.markAsHit/markAsMiss depending on output of shipBoard.isShip()
@@ -36,6 +37,8 @@ public class LowerBoard {
      * @param ship the ship to be placed
      */
     public void placeShip(int[] coord, Ship ship){
+        //TODO: Sabella
+
         // TODO: should call shipBoard.insertShip
     }
 

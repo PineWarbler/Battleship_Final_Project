@@ -23,6 +23,7 @@ public class ShipBoard extends Board {
      * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
      */
     public void insertShip(int[][] occupancyCoords, Ship ship) throws IllegalArgumentException {
+        //TODO: Peter
         // TODO: complete this method, being sure to call ship's getHashID method!
     }
 
@@ -33,11 +34,13 @@ public class ShipBoard extends Board {
      * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
      */
     public void insertShip(int[] startCoord, char direction, Ship ship) throws IllegalArgumentException {
+        //TODO; Peter
         // TODO: complete this method
     }
 
     @Override
     public void markAsHit(int[] coord) {
+        //TODO: Corn
         // TODO: complete this method. decrement health of the ship at `coord` if hit.
     }
 
@@ -53,6 +56,7 @@ public class ShipBoard extends Board {
      * @throws IllegalArgumentException if no matching ship is found (i.e. if {@code hashID}=={@link #emptyHash})
      */
     public Ship identifyShip(int hashID) throws IllegalArgumentException{
+        // TODO: Corn
         // TODO: complete this method according to the Javadoc above
         // hint: should call isShip for efficiency
 
