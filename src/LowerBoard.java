@@ -28,12 +28,26 @@ public class LowerBoard {
         // should call histBoard.markAsHit/markAsMiss depending on output of shipBoard.isShip()
 
 
+        cellStatus status = this.shipBoard.processIncomingGuess(coord);
+
+        if(status == cellStatus.HIT){
+            this.histBoard.markAsHit(coord);
+            return cellStatus.HIT;
+        }
+        else if(status==cellStatus.MISS){
+            this.histBoard.markAsMissed(coord);
+            return cellStatus.MISS;
+        }
+
+
+
+
         return null;
     }
 
     /**
      * inserts ship into the ShipBoard
-     * @param coord coordinates of points which the
+     * @param coord coordinates of points wich the
      * @param ship the ship to be placed
      */
     public void placeShip(int[] coord, Ship ship){
