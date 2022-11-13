@@ -103,26 +103,22 @@ public class LowerBoard {
 
                 for (int j = 1; j < edgeSize+1; j++) {
 
-//                    if (this.board[i-1][j-1]) {
-//                        sb.append("\u001B[32m" + "T"+ "\033[0m");
-//                    } else {
-//                        sb.append("\u001B[31m" + "F" + "\033[0m");
-//                    }
-
+                    boolean isShipInCell = shipBoard.isShip(new int[]{i-1, j-1});
+                    cellStatus cs = this.histBoard.cellStatuses[i-1][j-1];
                     //⧆□▣⧇⬜⬛
-                    if((this.histBoard.cellStatuses[i-1][j-1] == cellStatus.HIT)&&(shipBoard.hashArray[i-1][j-1]!=0)){
+                    if((cs == cellStatus.HIT) && isShipInCell){
                         sb.append("\u001B[97m"+"\u001B[1m" + "▣"+ "\033[0m");
 
                     }
-
-                    else if(this.histBoard.cellStatuses[i-1][j-1] == cellStatus.HIT){
-                            sb.append("\u001B[32m" + "O"+ "\033[0m");
-                        }
-                    else if(shipBoard.hashArray[i-1][j-1]!=0){
+                    // why would there be a hit on a cell without a ship? I don't think we need the else if below...
+//                    else if(this.histBoard.cellStatuses[i-1][j-1] == cellStatus.HIT){
+//                            sb.append("\u001B[32m" + "O"+ "\033[0m");
+//                        }
+                    else if(isShipInCell && (cs == cellStatus.NONE)){
                         sb.append("\u001B[47m"+"\u001B[1m" + "⬜"+ "\033[0m");
                     }
 
-                    else if(this.histBoard.cellStatuses[i-1][j-1] == cellStatus.MISS){
+                    else if(cs == cellStatus.MISS){
                         sb.append("\u001B[31m" + "X" + "\033[0m");
                     }
 

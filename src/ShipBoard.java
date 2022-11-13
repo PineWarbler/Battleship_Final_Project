@@ -7,7 +7,7 @@ import java.util.Map;
  * does not keep track of hit/miss locations (that's the job of {@link HitOrMissHistoryBoard})
  */
 public class ShipBoard extends Board {
-    private ArrayList<Ship> shipList;
+    private ArrayList<Ship> shipList; // could infer these from a <set> of hashes in array and match those to each ship
     protected int[][] hashArray; // used to store hashes of ships in a grid pattern; cells accessed by (row, column)
 
     private static final int emptyHash = 17; // should be prime.  Hash of an empty cell
@@ -62,6 +62,7 @@ public class ShipBoard extends Board {
                 int coordCol = coord[1];
                 this.hashArray[coordRow][coordCol] = hashID;
             }
+            this.shipList.add(ship);
         }
     }
 
