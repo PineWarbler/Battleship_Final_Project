@@ -27,9 +27,11 @@ public class Player {
      * @param coord the coordinate of the guess
      */
     public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatus){
-        //TODO: Peter
-        // TODO: complete this method according to the Javadoc above
-        // hint: should call this.upperBoard.markAsHit/markAsMissed depending on `responseStatus`
+        if(responseStatus==cellStatus.HIT){
+            this.upperBoard.markAsHit(coord);
+        } else if (responseStatus==cellStatus.MISS){
+            this.upperBoard.markAsMissed(coord);
+        }
     }
 
     /**
