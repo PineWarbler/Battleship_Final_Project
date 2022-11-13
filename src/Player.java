@@ -44,6 +44,14 @@ public class Player {
     }
 
     // --------------- GETTERS AND SETTERS ----------------
+    public LowerBoard getLowerBoard(){
+        return this.lowerBoard;
+    }
+
+    public HitOrMissHistoryBoard getUpperBoard(){
+        return this.upperBoard;
+    }
+
     public void setLowerBoard(LowerBoard lowerBoard) {
         this.lowerBoard = lowerBoard;
     }

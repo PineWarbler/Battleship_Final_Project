@@ -47,7 +47,7 @@ public class LowerBoard {
 
     /**
      * inserts ship into the ShipBoard
-     * @param coord coordinates of points wich the
+     * @param coord coordinates of points which the ship should occupy
      * @param ship the ship to be placed
      */
     public void placeShip(int[] coord, Ship ship){
@@ -58,6 +58,10 @@ public class LowerBoard {
 
     public int getHealth(){
         return this.shipBoard.getHealth();
+    }
+
+    public ShipBoard getShipBoard(){
+        return this.shipBoard;
     }
 
 

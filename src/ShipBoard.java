@@ -19,8 +19,16 @@ public class ShipBoard extends Board {
         this.initializeAsEmpty(hashArray);
     }
 
+    /**
+     * fills all elements in {@link #hashArray} with the {@link #emptyHash}
+     * @param ha the hashArray
+     */
     public void initializeAsEmpty(int[][] ha){
-        // TODO: initialize all cells in board to be empty hashes
+        for(int i = 0; i<ha.length; i++){ // for each column coord
+            for(int j = 0; j<ha[0].length; j++){ // for each row coord
+                this.hashArray[i][j] = emptyHash;
+            }
+        }
     }
 
     /**
@@ -45,8 +53,6 @@ public class ShipBoard extends Board {
      * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
      */
     public void insertShip(int[][] occupancyCoords, Ship ship) throws IllegalArgumentException {
-        //TODO: Peter
-        // TODO: complete this method, being sure to call ship's getHashID method!
         if(!areCoordsUnoccupied(occupancyCoords)){
             throw new IllegalArgumentException("One or more of the requested occupancy coordinates is already occupied and unavailable.");
         } else {
@@ -68,11 +74,7 @@ public class ShipBoard extends Board {
     public void insertShip(int[] pivotCoord, char direction, Ship ship) throws IllegalArgumentException {
         // first compile a list of the requested coordinates and make sure they're unoccupied
         int[][] occupancyCoords = convertFromPivotAndDirection(pivotCoord, direction, ship.getLength());
-        if(!areCoordsUnoccupied(occupancyCoords)){
-            throw new IllegalArgumentException("One or more of the requested occupancy coordinates is already occupied and unavailable.");
-        } else {
-            insertShip(occupancyCoords, ship);
-        }
+        insertShip(occupancyCoords, ship); // this method will raise the required exception if necessary
     }
 
     public int[][] convertFromPivotAndDirection(int[] pivotCoord, char direction, int length){
