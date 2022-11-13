@@ -49,5 +49,9 @@ public class Ship {
         return this.sternCoord;
     }
 
+    public int getLength(){
+        return this.length;
+    }
+
 
 }

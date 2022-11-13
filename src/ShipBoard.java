@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ShipBoard stores the locations of ships on the board in an array of integers/hashes <b>and</b> as an arraylist of ships;
@@ -6,7 +8,7 @@ import java.util.ArrayList;
  */
 public class ShipBoard extends Board {
     private ArrayList<Ship> shipList;
-    protected int[][] hashArray; // used to store hashes of ships in a grid pattern
+    protected int[][] hashArray; // used to store hashes of ships in a grid pattern; cells accessed by (row, column)
 
     private static final int emptyHash = 17; // should be prime.  Hash of an empty cell
 
@@ -22,6 +24,21 @@ public class ShipBoard extends Board {
     }
 
     /**
+     * Checks each coordinate to see if all are unoccupied; otherwise returns false
+     * @param coords
+     * @return whether the requested coordinates are unoccupied by another ship
+     */
+    public boolean areCoordsUnoccupied(int[][] coords){
+        for(int[] coord : coords){
+            int coordRow = coord[0];
+            int coordCol = coord[1];
+            if(this.hashArray[coordRow][coordCol] != emptyHash){ // a ship has a non-empty hash
+                return false; // because coordinate is already occupied
+            }
+        }
+        return true; // because the method hasn't returned false yet
+    }
+    /**
      * Inserts a ship into board by placing its hashes into {@link #hashArray}
      * @param occupancyCoords a 2D array of zero-based-indexed board coordinates which a single ship occupies
      * @param ship the ship to be inserted
@@ -30,17 +47,60 @@ public class ShipBoard extends Board {
     public void insertShip(int[][] occupancyCoords, Ship ship) throws IllegalArgumentException {
         //TODO: Peter
         // TODO: complete this method, being sure to call ship's getHashID method!
+        if(!areCoordsUnoccupied(occupancyCoords)){
+            throw new IllegalArgumentException("One or more of the requested occupancy coordinates is already occupied and unavailable.");
+        } else {
+            int hashID = ship.getHashID();
+            for (int[] coord : occupancyCoords) {
+                int coordRow = coord[0];
+                int coordCol = coord[1];
+                this.hashArray[coordRow][coordCol] = hashID;
+            }
+        }
     }
 
     /**
      * Inserts a ship into board by placing its hashes into {@link #hashArray}
-     * @param startCoord either the bow or stern coord
+     * @param pivotCoord either the bow or stern coord
      * @param direction options: 'N', 'S', 'E', 'W' like compass direction; direction in which rest of ship lies relative to the {@code startCoord}
      * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
      */
-    public void insertShip(int[] startCoord, char direction, Ship ship) throws IllegalArgumentException {
-        //TODO; Peter
-        // TODO: complete this method
+    public void insertShip(int[] pivotCoord, char direction, Ship ship) throws IllegalArgumentException {
+        // first compile a list of the requested coordinates and make sure they're unoccupied
+        int[][] occupancyCoords = convertFromPivotAndDirection(pivotCoord, direction, ship.getLength());
+        if(!areCoordsUnoccupied(occupancyCoords)){
+            throw new IllegalArgumentException("One or more of the requested occupancy coordinates is already occupied and unavailable.");
+        } else {
+            insertShip(occupancyCoords, ship);
+        }
+    }
+
+    public int[][] convertFromPivotAndDirection(int[] pivotCoord, char direction, int length){
+        // this hashmap stores vector components for movement inside a 2D field
+        // vector components : (ΔRow, ΔColumn); note that positive Δ is towards bottom/right of 2D field!
+        HashMap<Character, int[]> dir2Delta = new HashMap<>();
+        dir2Delta.put('N', new int[]{-1, 0});
+        dir2Delta.put('S', new int[]{1, 0});
+        dir2Delta.put('E', new int[]{0, 1});
+        dir2Delta.put('W', new int[]{0, -1});
+
+        int[][] occupancyCoords = new int[length][2]; // array to contain # of elements given by `length` which are each 2 long
+        occupancyCoords[0] = pivotCoord; // populate first element with the pivot coordinate
+        for(int i = 1; i<length; i++){
+            int[] previousCoord = occupancyCoords[i-1];
+            occupancyCoords[i] = addVectors(previousCoord, dir2Delta.get(direction));
+        }
+        return occupancyCoords;
+    }
+
+    /**
+     * Performs element-wise addition on two input vectors
+     * @param m1 one vector
+     * @param m2 the second vector
+     * @return
+     */
+    private int[] addVectors(int[] m1, int[] m2){
+        return new int[]{m1[0]+m2[0], m1[1]+m2[1]};
     }
 
     @Override
