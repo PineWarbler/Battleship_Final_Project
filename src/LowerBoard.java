@@ -6,6 +6,11 @@ public class LowerBoard {
     private HitOrMissHistoryBoard histBoard;
     private ShipBoard shipBoard;
 
+    /**
+     * Constructor for the lower board
+     * @param historyBoard
+     * @param shipBoard
+     */
     public LowerBoard(HitOrMissHistoryBoard historyBoard, ShipBoard shipBoard){
         // TODO: complete this constructor
         edgeSize = historyBoard.edgeSize;
@@ -39,9 +44,6 @@ public class LowerBoard {
             return cellStatus.MISS;
         }
 
-
-
-
         return null;
     }
 
@@ -56,15 +58,25 @@ public class LowerBoard {
         // TODO: should call shipBoard.insertShip
     }
 
+    /**
+     * Gets health of the ships
+     * @return health
+     */
     public int getHealth(){
         return this.shipBoard.getHealth();
     }
 
+    /**
+     * Gets the ship board
+     * @return shipBoard
+     */
     public ShipBoard getShipBoard(){
         return this.shipBoard;
     }
 
-
+    /**
+     * Prints out lower board
+     */
     public void printBoard(){
 
         //weir - not tested yet

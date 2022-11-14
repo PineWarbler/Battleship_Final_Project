@@ -35,6 +35,9 @@ public class HitOrMissHistoryBoard extends Board {
         this.cellStatuses[coord[0]][coord[1]] = cellStatus.MISS;
     }
 
+    /**
+     *
+     */
     @Override
     public void printBoard() {
         //This works for edge sizes <100, then the spacing is weird due to character limits

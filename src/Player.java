@@ -7,6 +7,10 @@ public class Player {
     protected HitOrMissHistoryBoard upperBoard;
 
 
+    /**
+     * Player constructor
+     * @param name
+     */
     public Player(String name){
 
         this.name = name;
@@ -18,6 +22,10 @@ public class Player {
         // TODO: complete this constructor.  Make sure to call this.getHealth to set the health value
     }
 
+    /**
+     * Boolean returns true if the player has lost
+     * @return true when health <= 0
+     */
     public boolean hasLost(){
         return this.getHealth()<=0;
     }

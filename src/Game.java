@@ -26,7 +26,9 @@ public class Game {
         return null;
     }
 
-
+    /**
+     * loops through turns until there is a winner
+     */
     public void gameLoop(){
         // create two player objects
         Player p1=new Player("bob");

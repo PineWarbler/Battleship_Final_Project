@@ -12,6 +12,10 @@ public class ShipBoard extends Board {
 
     private static final int emptyHash = 17; // should be prime.  Hash of an empty cell
 
+    /**
+     * ShipBoard constructor
+     * @param edgeSize
+     */
     public ShipBoard(int edgeSize) {
         super(edgeSize);
         this.shipList = new ArrayList<>();
@@ -78,6 +82,13 @@ public class ShipBoard extends Board {
         insertShip(occupancyCoords, ship); // this method will raise the required exception if necessary
     }
 
+    /**
+     * Stores vector components for movement inside a 2D field
+     * @param pivotCoord
+     * @param direction
+     * @param length
+     * @return coordinates that are occupied
+     */
     public int[][] convertFromPivotAndDirection(int[] pivotCoord, char direction, int length){
         // this hashmap stores vector components for movement inside a 2D field
         // vector components : (ΔRow, ΔColumn); note that positive Δ is towards bottom/right of 2D field!
@@ -106,12 +117,21 @@ public class ShipBoard extends Board {
         return new int[]{m1[0]+m2[0], m1[1]+m2[1]};
     }
 
+    /**
+     * Decrements the health of the ship at 'coord' if hit
+     * @param coord
+     */
     @Override
     public void markAsHit(int[] coord) {
         //TODO: Corn
         // TODO: complete this method. decrement health of the ship at `coord` if hit.
     }
 
+    /**
+     * Determines whether or not there is a ship present or not
+     * @param coord
+     * @return
+     */
     public boolean isShip(int[] coord){
         return this.hashArray[coord[0]][coord[1]] != emptyHash;
     }
@@ -158,6 +178,9 @@ public class ShipBoard extends Board {
     }
 
 
+    /**
+     * Prints ship board
+     */
     @Override
     public void printBoard() {
         // weir
