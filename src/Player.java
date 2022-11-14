@@ -1,17 +1,18 @@
 public class Player {
 
-    private String name;
-    private int health;
+    protected String name;
+    protected int health;
 
-    private LowerBoard lowerBoard;
-    private HitOrMissHistoryBoard upperBoard;
+    protected LowerBoard lowerBoard;
+    protected HitOrMissHistoryBoard upperBoard;
+
 
     public Player(String name){
+
         this.name = name;
-    }
+        this.health = 16;
+        //make an empty lowerBoard and upperBoard by calling their constructors
 
-
-    public Player(String name, LowerBoard lowerBoard, HitOrMissHistoryBoard upperBoard, int health){
         //TODO: Corn
 
         // TODO: complete this constructor.  Make sure to call this.getHealth to set the health value
@@ -26,9 +27,11 @@ public class Player {
      * @param coord the coordinate of the guess
      */
     public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatus){
-        //TODO: Peter
-        // TODO: complete this method according to the Javadoc above
-        // hint: should call this.upperBoard.markAsHit/markAsMissed depending on `responseStatus`
+        if(responseStatus==cellStatus.HIT){
+            this.upperBoard.markAsHit(coord);
+        } else if (responseStatus==cellStatus.MISS){
+            this.upperBoard.markAsMissed(coord);
+        }
     }
 
     /**
@@ -41,6 +44,14 @@ public class Player {
     }
 
     // --------------- GETTERS AND SETTERS ----------------
+    public LowerBoard getLowerBoard(){
+        return this.lowerBoard;
+    }
+
+    public HitOrMissHistoryBoard getUpperBoard(){
+        return this.upperBoard;
+    }
+
     public void setLowerBoard(LowerBoard lowerBoard) {
         this.lowerBoard = lowerBoard;
     }
