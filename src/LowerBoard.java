@@ -27,13 +27,7 @@ public class LowerBoard {
      * @return whether cell is a hit or not
      */
     public cellStatus processIncomingGuess(int[] coord) {
-        //TODO: Jon
-        // TODO: complete this method according to the Javadoc above
-        // should call shipBoard.processIncomingGuess and
-        // should call histBoard.markAsHit/markAsMiss depending on output of shipBoard.isShip()
-
-
-        cellStatus status = this.shipBoard.processIncomingGuess(coord);
+        cellStatus status = this.shipBoard.processIncomingGuess(coord); // decrements health of ship and returns hit/miss
 
         if(status == cellStatus.HIT){
             this.histBoard.markAsHit(coord);
@@ -44,7 +38,7 @@ public class LowerBoard {
             return cellStatus.MISS;
         }
 
-        return null;
+        return status;
     }
 
     /**
@@ -54,8 +48,8 @@ public class LowerBoard {
      */
     public void placeShip(int[] coord, Ship ship){
         //TODO: Sabella
-
-        // TODO: should call shipBoard.insertShip
+        // UMM...[REYNOLDS] I don't think we need this method as long as Player.lowerBoard is not private
+        // then we can call player1.lowerBoard.getShipBoard().processIncomingGuess();
     }
 
     /**
