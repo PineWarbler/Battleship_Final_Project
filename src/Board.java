@@ -3,7 +3,7 @@ public abstract class Board {
     protected final int edgeSize;
 
     /**
-     * Creates an empty board
+     * Creates an empty board of size edgeSize by edgeSize
      * @param edgeSize
      */
     public Board(int edgeSize){
@@ -11,7 +11,7 @@ public abstract class Board {
     }
 
     /**
-     * Keeps track of the hits on the board
+     * Takes in coord and marks that location as hit
      * @param coord
      */
     // please override these methods in `LowerBoard` because it contains two boards and must modify both boards

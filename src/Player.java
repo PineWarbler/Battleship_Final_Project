@@ -11,15 +11,12 @@ public class Player {
      * Player constructor
      * @param name
      */
-    public Player(String name){
+    public Player(String name, int edgeSize){
 
         this.name = name;
-        this.health = 16;
-        //make an empty lowerBoard and upperBoard by calling their constructors
-
-        //TODO: Corn
-
-        // TODO: complete this constructor.  Make sure to call this.getHealth to set the health value
+        this.health = 0;
+        this.lowerBoard = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
+        this.upperBoard = new HitOrMissHistoryBoard(edgeSize);
     }
 
     /**

@@ -123,8 +123,8 @@ public class ShipBoard extends Board {
      */
     @Override
     public void markAsHit(int[] coord) {
-        //TODO: Corn
-        // TODO: complete this method. decrement health of the ship at `coord` if hit.
+        identifyShip(this.hashArray[coord[0]][coord[1]]).decrementHealth();
+
     }
 
     /**
@@ -144,12 +144,12 @@ public class ShipBoard extends Board {
      * @throws IllegalArgumentException if no matching ship is found (i.e. if {@code hashID}=={@link #emptyHash})
      */
     public Ship identifyShip(int hashID) throws IllegalArgumentException{
-        // TODO: Corn
-        // TODO: complete this method according to the Javadoc above
-        // hint: should call isShip for efficiency
-
-
-        return null;
+        for (Ship i : shipList){
+            if(i.getHashID() == hashID){
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("No matching ship is found.");
     }
 
     /**
