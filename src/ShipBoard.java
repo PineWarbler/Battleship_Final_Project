@@ -66,7 +66,10 @@ public class ShipBoard extends Board {
                 int coordCol = coord[1];
                 this.hashArray[coordRow][coordCol] = hashID;
             }
-            this.shipList.add(ship);
+            // make sure to include bow and stern coords also!
+            ship.setBowCoord(occupancyCoords[0]);
+            ship.setBowCoord(occupancyCoords[occupancyCoords.length-1]);
+            this.shipList.add(ship); // add the ship to the list
         }
     }
 

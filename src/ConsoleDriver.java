@@ -28,7 +28,7 @@ public class ConsoleDriver {
         }
         System.out.println("The final board looks like: ");
         lb.getShipBoard().printBoard();
-        
+
         p.setLowerBoard(lb);
         HitOrMissHistoryBoard ub = new HitOrMissHistoryBoard(edgeSize);
         p.setUpperBoard(ub);

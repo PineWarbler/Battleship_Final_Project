@@ -2,7 +2,6 @@ public class Ship {
     private int health; // how many segments of ship are not hit
     private int length; // how many segments ship occupies
     int[] bowCoord, sternCoord; // these are necessary to determine the direction in which the ship is pointed (could be one of two directions)
-    private int randomSeed;
 
     /**
      *Ship constructor
@@ -15,7 +14,6 @@ public class Ship {
         this.length = length;
         this.bowCoord = bowCoord;
         this.sternCoord = sternCoord;
-        this.randomSeed = (int) System.currentTimeMillis();
     }
 
     public Ship(int length){
@@ -43,9 +41,8 @@ public class Ship {
      * @return
      */
     public int getHashID(){
-//        return (int) 11 * health * length * bowCoord[1] * bowCoord[0] * sternCoord[1] * sternCoord[0];
-        return 17 * randomSeed * (int) Math.pow((double) health, (double) length); // exponentiation preferred over multiplication because
-        // it is order-specific.  Two ships could return the same hash if their healths and lengths are criss-crossed if multiplication is used.
+        // adding one to all multiplication elements so that no elements are zero.  Otherwise, if one element was zero, hashes of different ships would all return zero.
+        return 17 + (int) 11 * (health+1) * (length+1) * (bowCoord[1]+1) * (bowCoord[0]+1) * (sternCoord[1]+1) * (sternCoord[0]+1);
     }
 
     /**
@@ -82,5 +79,11 @@ public class Ship {
         return this.length;
     }
 
+    public void setBowCoord(int[] bowCoord) {
+        this.bowCoord = bowCoord;
+    }
 
+    public void setSternCoord(int[] sternCoord) {
+        this.sternCoord = sternCoord;
+    }
 }
