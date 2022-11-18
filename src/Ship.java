@@ -11,11 +11,14 @@ public class Ship {
      * @param sternCoord
      */
     public Ship(int length,int[] bowCoord, int[] sternCoord){
-        // TODO: complete this constructor by initializing `health`, `length`, and coord matrices
         this.health = length;
         this.length = length;
         this.bowCoord = bowCoord;
         this.sternCoord = sternCoord;
+    }
+
+    public Ship(int length){
+        this.length = length;
     }
 
     /**
