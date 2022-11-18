@@ -39,11 +39,7 @@ public class Ship {
      * @return
      */
     public int getHashID(){
-        //TODO: Sabella
-
-        // TODO: complete this method. (Hint: should be similar to hashCode())
-
-        return 1;
+        return (int) 11 * health * length * bowCoord[1] * bowCoord[0] * sternCoord[1] * sternCoord[0];
     }
 
     /**
