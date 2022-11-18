@@ -48,11 +48,8 @@ public class Ship {
      * @return True if otherHashID equals this ship's hashID; False otherwise
      */
     public boolean compareHashID(int otherHashID){
-        //TODO: Sabella
 
-        // TODO: complete this method according to Javadoc above
-
-        return true;
+        return otherHashID == this.getHashID();
     }
 
     /**
