@@ -5,7 +5,7 @@ public class ConsoleDriver {
     /**
      *
      * @param p
-     * @param allowedShipLengths a list of allowed ship lengths; may contain two ships of the same length
+     * @param allowedShipLengths a list of allowed ship lengths; may contain multiple ships of the same length
      * @return
      */
     public static Player setUp(Player p, int[] allowedShipLengths) {
@@ -27,8 +27,10 @@ public class ConsoleDriver {
             lb.getShipBoard().insertShip(new int[]{pivRow, pivCol}, pivDir, newShip);
         }
         System.out.println("The final board looks like: ");
-        System.out.println(lb.getShipBoard().toString());
+        lb.getShipBoard().printBoard();
+        return p;
     }
+
     public static void main(String[] args) {
 
         // DO NOT NEED THIS
@@ -67,5 +69,4 @@ public class ConsoleDriver {
     }
 
 
-    }
 }
