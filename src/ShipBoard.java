@@ -54,12 +54,14 @@ public class ShipBoard extends Board {
      * Inserts a ship into board by placing its hashes into {@link #hashArray}
      * @param occupancyCoords a 2D array of zero-based-indexed board coordinates which a single ship occupies
      * @param ship the ship to be inserted
-     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
+     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship OR if any is not within the bounds of the board
      */
     public void insertShip(int[][] occupancyCoords, Ship ship) throws IllegalArgumentException {
         if(!areCoordsUnoccupied(occupancyCoords)){
             throw new IllegalArgumentException("One or more of the requested occupancy coordinates is already occupied and unavailable.");
-        } else {
+        } else if(!isInBounds(occupancyCoords)) {
+            throw new IllegalArgumentException("One or more of the requested occupancy coordinates is not within the bounds of the board");
+        } else{
             int hashID = ship.getHashID();
             for (int[] coord : occupancyCoords) {
                 int coordRow = coord[0];
@@ -77,12 +79,28 @@ public class ShipBoard extends Board {
      * Inserts a ship into board by placing its hashes into {@link #hashArray}
      * @param pivotCoord either the bow or stern coord
      * @param direction options: 'N', 'S', 'E', 'W' like compass direction; direction in which rest of ship lies relative to the {@code startCoord}
-     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship
+     * @throws IllegalArgumentException if any of the requested board slots is already occupied by another ship OR if any is not within the bounds of the board
      */
     public void insertShip(int[] pivotCoord, char direction, Ship ship) throws IllegalArgumentException {
         // first compile a list of the requested coordinates and make sure they're unoccupied
         int[][] occupancyCoords = convertFromPivotAndDirection(pivotCoord, direction, ship.getLength());
         insertShip(occupancyCoords, ship); // this method will raise the required exception if necessary
+    }
+
+    /**
+     * checks to see if the requested coordinates are inside the board; does not check if they're occupied
+     * @param occupancyCoords a list of coordinates which the ship intends to occupy
+     * @return whether all coordinates lie within the board bounds
+     */
+    public boolean isInBounds(int[][] occupancyCoords){
+        for(int[] pair : occupancyCoords){
+            if(pair[0] < 0 || pair[1] < 0){
+                return false;
+            } else if (pair[0] > edgeSize || pair[1] > edgeSize){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
