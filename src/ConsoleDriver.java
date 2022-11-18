@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class ConsoleDriver {
     static final int edgeSize = 10;
     /**
-     *
+     * allows user to input ship locations via the console
      * @param p
      * @param allowedShipLengths a list of allowed ship lengths; may contain multiple ships of the same length
      * @return
@@ -28,6 +28,28 @@ public class ConsoleDriver {
         }
         System.out.println("The final board looks like: ");
         lb.getShipBoard().printBoard();
+        
+        p.setLowerBoard(lb);
+        HitOrMissHistoryBoard ub = new HitOrMissHistoryBoard(edgeSize);
+        p.setUpperBoard(ub);
+        return p;
+    }
+
+    /**
+     * places ships in an arbitrary pattern for testing purposes; no user input
+     * @param p
+     * @param allowedShipLengths
+     * @return
+     */
+    public static Player setUpAuto(Player p, int[] allowedShipLengths) {
+        LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
+        for(int i = 0; i<allowedShipLengths.length; i++) {
+            Ship newShip = new Ship(allowedShipLengths[i]);
+            lb.getShipBoard().insertShip(new int[]{i, 0}, 'E', newShip);
+        }
+        p.setLowerBoard(lb);
+        HitOrMissHistoryBoard ub = new HitOrMissHistoryBoard(edgeSize);
+        p.setUpperBoard(ub);
         return p;
     }
 
@@ -52,7 +74,12 @@ public class ConsoleDriver {
         Player p2=new Player("sally", edgeSize); // the other player should be a computer (but that's not completed yet)
 
         int[] allowedShipLengths = new int[]{5, 4, 3, 3, 2};
-        setUp(p1, allowedShipLengths);
+//        setUp(p1, allowedShipLengths);
+        p1 = setUpAuto(p1, allowedShipLengths);
+        p1.getLowerBoard().printBoard();
+
+        p2 = setUpAuto(p2, allowedShipLengths);
+        p2.getLowerBoard().printBoard();
 
         Player askingPlayer = p1; // or can choose randomly who goes first
         Player respondingPlayer = p2;
