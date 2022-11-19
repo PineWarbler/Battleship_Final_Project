@@ -18,6 +18,7 @@ public class Ship {
 
     public Ship(int length){
         this.length = length;
+        this.health = length;
     }
 
     /**
@@ -42,7 +43,12 @@ public class Ship {
      */
     public int getHashID(){
         // adding one to all multiplication elements so that no elements are zero.  Otherwise, if one element was zero, hashes of different ships would all return zero.
-        return 17 + (int) 11 * (health+1) * (length+1) * (bowCoord[1]+1) * (bowCoord[0]+1) * (sternCoord[1]+1) * (sternCoord[0]+1);
+        // health should not be included in the hash because it changes during the game
+        try {
+            return 17 + (int) 11 * (length + 1) * (bowCoord[1] + 1) * (bowCoord[0] + 1) * (sternCoord[1] + 1) * (sternCoord[0] + 1);
+        } catch (Exception e){
+            return 17 + (int) 11 * (length + 1); // this is if bowCoord and sternCoords are null
+        }
     }
 
     /**

@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ConsoleDriver {
@@ -53,6 +54,28 @@ public class ConsoleDriver {
         return p;
     }
 
+    public static int[] getUsersGuess(Player p){
+        Scanner sc = new Scanner(System.in);
+        boolean validInput = false;
+        while(!validInput) {
+            System.out.println("Enter column number of guess: ");
+            int colNum = sc.nextInt();
+            System.out.println("Enter row letter of guess: ");
+            char rowChar = sc.next().charAt(0);
+
+            // check to see if guess is a valid character and if it's not been guessed before; otherwise, ask until valid input
+            int[] potentialGuess = new int[]{rowChar - 65, colNum};
+            if (((rowChar - 65) < 10) && rowChar > 64) {
+                if(!p.hasBeenAlreadyGuessed(potentialGuess)){
+                    validInput = true;
+                    p.recordAnswer(potentialGuess);
+                    return potentialGuess;
+                }
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 
         // DO NOT NEED THIS
@@ -71,27 +94,44 @@ public class ConsoleDriver {
 
                 // create two player objects
         Player p1=new Player("bob", edgeSize);
-        Player p2=new Player("sally", edgeSize); // the other player should be a computer (but that's not completed yet)
+        Computer p2 = new Computer(edgeSize); // the other player should be a computer (but that's not completed yet)
 
         int[] allowedShipLengths = new int[]{5, 4, 3, 3, 2};
-//        setUp(p1, allowedShipLengths);
+        // get opening board positions for both players
         p1 = setUpAuto(p1, allowedShipLengths);
         p1.getLowerBoard().printBoard();
 
-        p2 = setUpAuto(p2, allowedShipLengths);
+        p2 = (Computer) setUpAuto(p2, allowedShipLengths);
         p2.getLowerBoard().printBoard();
 
         Player askingPlayer = p1; // or can choose randomly who goes first
         Player respondingPlayer = p2;
         // get opening ship positions for both
-//        while(!p1.hasLost() && !p2.hasLost()){
-//
-//            int[] currPlayersGuess = getUsersGuess();
-//            cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
-//            askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
-//
-//            // TODO: toggle turn between askingPlayer and respondingPlayer or vice versa
-//        }
+        System.out.println(p1.getHealth());
+        System.out.println(p2.getHealth());
+        while(!p1.hasLost() && !p2.hasLost()){
+
+            int[] currPlayersGuess;
+            if(askingPlayer.getName().equals("Armada")){
+                currPlayersGuess = p2.generateGuess();
+                System.out.println(askingPlayer.getName() + " guesses " + Arrays.toString(currPlayersGuess));
+            } else {
+                currPlayersGuess = getUsersGuess(askingPlayer);;
+            }
+
+            cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
+            System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
+            askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
+
+            System.out.println("Now it's " + respondingPlayer.getName() + "'s turn.");
+            if(askingPlayer == p1){
+                askingPlayer = p2;
+                respondingPlayer = p1;
+            } else{
+                askingPlayer = p1;
+                respondingPlayer = p2;
+            }
+        }
 
     }
 

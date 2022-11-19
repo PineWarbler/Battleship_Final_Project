@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Player {
 
     protected String name;
@@ -5,6 +7,8 @@ public class Player {
 
     protected LowerBoard lowerBoard;
     protected HitOrMissHistoryBoard upperBoard;
+
+    private ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
 
 
     /**
@@ -17,6 +21,7 @@ public class Player {
         this.health = 0;
         this.lowerBoard = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
         this.upperBoard = new HitOrMissHistoryBoard(edgeSize);
+        alreadyGuessed = new ArrayList<>();
     }
 
     /**
@@ -25,6 +30,10 @@ public class Player {
      */
     public boolean hasLost(){
         return this.getHealth()<=0;
+    }
+
+    public void recordAnswer(int[] coord){
+        this.alreadyGuessed.add(coord); // append to end of list
     }
 
     /**
@@ -48,6 +57,15 @@ public class Player {
         return this.lowerBoard.processIncomingGuess(coord);
     }
 
+    /**
+     * checks to see if this player has already guessed a coordinate
+     * @param coord
+     * @return
+     */
+    public boolean hasBeenAlreadyGuessed(int[] coord){
+        System.out.println(alreadyGuessed.toString());
+        return this.alreadyGuessed.contains(coord);
+    }
     // --------------- GETTERS AND SETTERS ----------------
     public LowerBoard getLowerBoard(){
         return this.lowerBoard;

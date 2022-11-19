@@ -1,6 +1,7 @@
+import java.util.Random;
 import java.util.TreeSet;
 
-public class Computer extends  Player{
+public class Computer extends Player{
 
     private int[][] consecutiveHits;
     private Boolean wasHit;
@@ -9,8 +10,8 @@ public class Computer extends  Player{
      * Constructor for the Computer class
      */
     //Constructs a computer as "armada." Creates possible moves.
-    public Computer() {
-        super("Armada");
+    public Computer(int edgeSize) {
+        super("Armada", edgeSize);
         //Jon
     }
 
@@ -21,7 +22,10 @@ public class Computer extends  Player{
      */
     public int[] generateGuess(){
         //Jon
-        return new int[]{0, 0};
+//        return new int[]{0, 0};
+        Random rand = new Random();
+        // for testing purposes when the actual guessing strategy has not been implemented
+        return new int[] {rand.nextInt(10), rand.nextInt(10)};
     }
 
 
