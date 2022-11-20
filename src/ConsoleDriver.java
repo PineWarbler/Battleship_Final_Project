@@ -69,8 +69,8 @@ public class ConsoleDriver {
             char rowChar = sc.next().charAt(0);
 
             // check to see if guess is a valid character and if it's not been guessed before; otherwise, ask until valid input
-            int[] potentialGuess = new int[]{rowChar - 65, colNum};
-            if ((((rowChar - 65) < 10) && rowChar > 64) && ((colNum < 11) && (colNum>=-1))) {
+            int[] potentialGuess = new int[]{rowChar - 65, colNum-1}; // -1 to revert to zero-based indexing
+            if ((((rowChar - 65) < 10) && rowChar > 64) && ((colNum < 11) && (colNum>0))) {
                 if(!p.hasBeenAlreadyGuessed(potentialGuess)){
                     p.recordAnswer(potentialGuess);
                     validInput = true;
@@ -137,12 +137,17 @@ public class ConsoleDriver {
                 currPlayersGuess = p2.generateGuess();
                 System.out.println(askingPlayer.getName() + " guesses " + Arrays.toString(currPlayersGuess));
             } else {
+                System.out.println("Upper Board:");
+                askingPlayer.upperBoard.printBoard();
+                System.out.println("Lower Board:");
+                askingPlayer.lowerBoard.printBoard();
                 currPlayersGuess = getUsersGuess(askingPlayer);
             }
 
             cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
             System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
             askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
+
 
             if(askingPlayer == p1){
                 askingPlayer = p2;
