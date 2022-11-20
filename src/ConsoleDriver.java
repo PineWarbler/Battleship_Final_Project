@@ -54,6 +54,11 @@ public class ConsoleDriver {
         return p;
     }
 
+    /**
+     * Gets integer array of guess from a player via the console; does error checking to make sure inputs are valid and records response as already guessed in the {@link Player} class
+     * @param p
+     * @return
+     */
     public static int[] getUsersGuess(Player p){
         Scanner sc = new Scanner(System.in);
         boolean validInput = false;
@@ -65,15 +70,30 @@ public class ConsoleDriver {
 
             // check to see if guess is a valid character and if it's not been guessed before; otherwise, ask until valid input
             int[] potentialGuess = new int[]{rowChar - 65, colNum};
-            if (((rowChar - 65) < 10) && rowChar > 64) {
+            if ((((rowChar - 65) < 10) && rowChar > 64) && ((colNum < 11) && (colNum>=-1))) {
                 if(!p.hasBeenAlreadyGuessed(potentialGuess)){
-                    validInput = true;
                     p.recordAnswer(potentialGuess);
+                    validInput = true;
                     return potentialGuess;
+                } else{
+                    System.out.println("You've already guessed that position.  Try again.");
                 }
+            } else{
+                System.out.println("Invalid input.  Try again.");
             }
         }
         return null;
+    }
+
+    /**
+     * asks the user for his/her preferred username
+     * @param p the person whose name is being requested
+     * @return
+     */
+    public static String getUserName(Player p){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter your username: ");
+        return sc.next();
     }
 
     public static void main(String[] args) {
@@ -92,11 +112,14 @@ public class ConsoleDriver {
         // ask for user input
         // call game.displayBoard() (of other similar method)
 
-                // create two player objects
+        // create two player objects
         Player p1=new Player("bob", edgeSize);
         Computer p2 = new Computer(edgeSize); // the other player should be a computer (but that's not completed yet)
 
+        p1.setName(getUserName(p1));
+
         int[] allowedShipLengths = new int[]{5, 4, 3, 3, 2};
+
         // get opening board positions for both players
         p1 = setUpAuto(p1, allowedShipLengths);
         p1.getLowerBoard().printBoard();
@@ -106,24 +129,21 @@ public class ConsoleDriver {
 
         Player askingPlayer = p1; // or can choose randomly who goes first
         Player respondingPlayer = p2;
-        // get opening ship positions for both
-        System.out.println(p1.getHealth());
-        System.out.println(p2.getHealth());
-        while(!p1.hasLost() && !p2.hasLost()){
 
+        while(!p1.hasLost() && !p2.hasLost()){
+            System.out.println("It's " + askingPlayer.getName() + "'s turn to guess.");
             int[] currPlayersGuess;
             if(askingPlayer.getName().equals("Armada")){
                 currPlayersGuess = p2.generateGuess();
                 System.out.println(askingPlayer.getName() + " guesses " + Arrays.toString(currPlayersGuess));
             } else {
-                currPlayersGuess = getUsersGuess(askingPlayer);;
+                currPlayersGuess = getUsersGuess(askingPlayer);
             }
 
             cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
             System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
             askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
 
-            System.out.println("Now it's " + respondingPlayer.getName() + "'s turn.");
             if(askingPlayer == p1){
                 askingPlayer = p2;
                 respondingPlayer = p1;
@@ -132,6 +152,7 @@ public class ConsoleDriver {
                 respondingPlayer = p2;
             }
         }
+        System.out.println(respondingPlayer.getName() + " has won!");
 
     }
 

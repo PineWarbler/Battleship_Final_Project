@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Player {
 
@@ -63,8 +64,12 @@ public class Player {
      * @return
      */
     public boolean hasBeenAlreadyGuessed(int[] coord){
-        System.out.println(alreadyGuessed.toString());
-        return this.alreadyGuessed.contains(coord);
+        for(int[] a : alreadyGuessed){
+            if(Arrays.equals(coord, a)){
+                return true;
+            }
+        }
+        return false;
     }
     // --------------- GETTERS AND SETTERS ----------------
     public LowerBoard getLowerBoard(){
