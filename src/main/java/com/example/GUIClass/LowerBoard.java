@@ -1,3 +1,5 @@
+package com.example.GUIClass;
+
 public class LowerBoard {
     // `LowerBoard` has both a `HitOrMissHistoryBoard` and a `ShipBoard`.
     // Analogous to real-life game setup.

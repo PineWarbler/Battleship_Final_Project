@@ -1,5 +1,6 @@
+package com.example.GUIClass;
+
 import java.util.Random;
-import java.util.TreeSet;
 
 public class Computer extends Player{
 

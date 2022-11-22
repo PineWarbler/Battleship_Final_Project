@@ -1,6 +1,7 @@
+package com.example.GUIClass;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ShipBoard stores the locations of ships on the board in an array of integers/hashes <b>and</b> as an arraylist of ships;

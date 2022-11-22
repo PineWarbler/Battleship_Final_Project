@@ -1,3 +1,5 @@
+package com.example.GUIClass;
+
 public abstract class Board {
 
     protected final int edgeSize;

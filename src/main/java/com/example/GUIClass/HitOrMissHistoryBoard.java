@@ -1,3 +1,5 @@
+package com.example.GUIClass;
+
 public class HitOrMissHistoryBoard extends Board {
 
     protected cellStatus[][] cellStatuses; // this stores a nxn representation of board cells (to be filled later)
