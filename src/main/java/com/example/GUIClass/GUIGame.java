@@ -1,10 +1,8 @@
 package com.example.GUIClass;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,17 +11,14 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static com.example.GUIClass.GUIGame.allowedShipLengths;
 import static com.example.GUIClass.GUIGame.edgeSize;
@@ -102,7 +97,7 @@ class ShipPlacerStage extends Stage{
      */
     public void drawPotentialShip(){
         for(int[] coord : potentialOccupancyCoords){
-            gpArray[coord[0]][coord[1]].setFill(Color.PURPLE);
+            gpArray[coord[1]][coord[0]].setFill(Color.PURPLE); // don't know why switching indices works, but it does...
         }
     }
 
@@ -112,8 +107,10 @@ class ShipPlacerStage extends Stage{
     public void drawShipBoard(){
         for(int i = 0; i<edgeSize; i++){
             for(int j = 0; j<edgeSize; j++){
-                if(shipBoard.getHashArray()[i][j] != ShipBoard.emptyHash){
+                if(shipBoard.getHashArray()[j][i] != ShipBoard.emptyHash){ // don't know why switching indices works, but it does...
                     gpArray[i][j].setFill(Color.PURPLE);
+                } else{
+                    gpArray[i][j].setFill(Color.BLACK);
                 }
             }
         }
@@ -150,12 +147,14 @@ class ShipPlacerStage extends Stage{
             public void handle(ActionEvent actionEvent) {
                 confirmCount[0]++;
                 shipBoard.insertShip(potentialOccupancyCoords, potentialShip); // all the error checking has already been done
-                System.out.println(Arrays.deepToString(potentialOccupancyCoords));
+//                System.out.println(Arrays.deepToString(potentialOccupancyCoords));
+//                System.out.println(Arrays.deepToString(shipBoard.getHashArray()));
                 confirmShipLocation.setDisable(true);
                 drawShipBoard(); // with newly added ship
 
                 if(confirmCount[0] == allowedShipLengths.length){
                     // then all the ships have been placed
+                    rotate.setDisable(true);
                     done.setDisable(false);
                 }
             }
@@ -164,8 +163,13 @@ class ShipPlacerStage extends Stage{
         done.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                done.setDisable(true); // only need to press done once!
                 shipBoard.printBoard();
+//                System.out.println(Arrays.deepToString(shipBoard.getHashArray()));
+                Stage s = (Stage) hb.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
+                s.close();
                 // maybe even launch the next stage
+                new GameLoopStage(mode, shipBoard);
             }
         });
 
@@ -175,7 +179,7 @@ class ShipPlacerStage extends Stage{
                 Rectangle r = new Rectangle();
                 r.setWidth(50);
                 r.setHeight(50);
-                r.setId("Upper;" + i + ";" + j);
+                r.setId("Upper;" + j + ";" + i);
 
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                     @Override
@@ -194,13 +198,22 @@ class ShipPlacerStage extends Stage{
 
                         System.out.println(shipLength);
                         char pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size()); // convert rotate click counts to pivot direction char
+//                        pivotDir = 'S';
+                        System.out.println("rotateClickCount: " + rotateClickCount[0]);
+                        System.out.println("" + pivotDir);
+                        System.out.println("dirMap size: " + dirMap.size());
                         int[] pivotCoord = new int[]{data.getRow(), data.getCol()};
                         potentialOccupancyCoords = shipBoard.convertFromPivotAndDirection(pivotCoord, pivotDir, shipLength);
+
+                        System.out.println(Arrays.deepToString(potentialOccupancyCoords));
+
                         // if it's a valid placement, draw the ship position on the board
                         if(shipBoard.isInBounds(potentialOccupancyCoords) && shipBoard.areCoordsUnoccupied(potentialOccupancyCoords)){
-                            drawPotentialShip();
                             confirmShipLocation.setDisable(false); // because position is valid and can be confirmed
                             potentialShip = new Ship(shipLength);
+                            drawPotentialShip();
+                        } else{
+                            confirmShipLocation.setDisable(true);
                         }
 
                     }
@@ -224,13 +237,19 @@ class ShipPlacerStage extends Stage{
 }
 
 class GameLoopStage extends Stage {
-    Label x = new Label("Second stage");
+    Label x;
     VBox y = new VBox();
 
-    GameLoopStage(String mode){
-        if(mode.equals("god")){
-            // play omnisciently
-        }
+    /**
+     *
+     * @param mode can be `stoopit`, `smart`, or `god-mode`
+     * @param shipBoard the assembled shipBoard as arranged by the user in {@link SettingsStage}
+     */
+    GameLoopStage(String mode, ShipBoard shipBoard){
+//        if(mode.equals("god")){
+//            // play omnisciently
+//        }
+        x = new Label("You've chosen to play a game in " + mode + " mode.");
         y.getChildren().add(x);
         this.setScene(new Scene(y, 300, 300));
         this.show();
