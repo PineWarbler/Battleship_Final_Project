@@ -36,6 +36,10 @@ public class HitOrMissHistoryBoard extends Board {
         this.cellStatuses[coord[0]][coord[1]] = cellStatus.MISS;
     }
 
+    public cellStatus getCellStatus(int[] coord){
+        return this.cellStatuses[coord[0]][coord[1]];
+    }
+
     /**
      *
      */

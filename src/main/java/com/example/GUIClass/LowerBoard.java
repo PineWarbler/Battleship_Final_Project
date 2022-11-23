@@ -70,6 +70,14 @@ public class LowerBoard {
         return this.shipBoard;
     }
 
+    public void setShipBoard(ShipBoard shipBoard){
+        this.shipBoard = shipBoard;
+    }
+
+    public HitOrMissHistoryBoard getHistBoard(){
+        return this.histBoard;
+    }
+
     /**
      * Prints out lower board
      */

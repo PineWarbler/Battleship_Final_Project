@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -237,8 +238,82 @@ class ShipPlacerStage extends Stage{
 }
 
 class GameLoopStage extends Stage {
+    Player human;
+    Computer armada;
+
     Label x;
-    VBox y = new VBox();
+    VBox vb = new VBox();
+    GridPane gpLowerBoard = new GridPane(); // used to store array of rectangles to represent the lower board
+    GridPane gpUpperBoard = new GridPane(); // used to store array of rectangles and buttons to represent the upper board
+
+    Rectangle[][] gpArrayUpperBoard = new Rectangle[edgeSize][edgeSize]; // used to easily change other cell properties
+    Rectangle[][] gpArrayLowerBoard = new Rectangle[edgeSize][edgeSize]; // used to easily change other cell properties
+
+
+    /**
+     * draws the positions of ships whose positions have already been confirmed
+     */
+    public void drawLowerBoard(){
+        for(int i = 0; i<edgeSize; i++){
+            for(int j = 0; j<edgeSize; j++){
+                if(human.lowerBoard.getShipBoard().getHashArray()[j][i] != ShipBoard.emptyHash){ // don't know why switching indices works, but it does...
+                    gpArrayLowerBoard[i][j].setFill(Color.PURPLE);
+                } else {
+                    gpArrayLowerBoard[i][j].setFill(Color.BLACK);
+                }
+
+                // also add a red dot to signify a hit on the lower board
+                if(human.lowerBoard.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.HIT){
+                    Circle c = new Circle();
+                    double radius = 15;
+                    c.setRadius(radius);
+                    c.setFill(Color.RED);
+                    gpLowerBoard.add(c, i, j, 1, 1);
+//                    gp.add(c, GridPane.getColumnIndex(r), GridPane.getRowIndex(r), 1,1);
+                }
+            }
+        }
+    }
+
+    public void drawUpperBoard(){
+        for(int i = 0; i<edgeSize; i++){
+            for(int j = 0; j<edgeSize; j++){
+                if(human.upperBoard.getCellStatus(new int[]{j, i}) == cellStatus.HIT){ // don't know why switching indices works, but it does...
+                    gpArrayUpperBoard[i][j].setFill(Color.RED);
+                } else if (human.upperBoard.getCellStatus(new int[]{j, i}) == cellStatus.MISS) {
+                    gpArrayUpperBoard[i][j].setFill(Color.WHITE);
+                } else{ // then it's a `none` enum type
+                    gpArrayUpperBoard[i][j].setFill(Color.BLACK);
+                }
+            }
+        }
+    }
+
+    public void masterHandler(String buttonGuessID){
+        // parse the buttonID for its coordinates
+        ElementIDParser idParser = new ElementIDParser();
+        ElementData data = idParser.parseID(buttonGuessID);
+
+        if(human.hasLost() || armada.hasLost()){
+            Stage s = (Stage) gpUpperBoard.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
+            s.close();
+            new postGameStage(human.lowerBoard, armada.lowerBoard); // let user see both/opposing side's ship positions
+        }
+
+        // human guesses a coordinate...handle this guess
+        int[] playerGuessCoord = new int[]{data.getRow(), data.getCol()};
+        cellStatus response = armada.processRequestFromOtherPlayer(playerGuessCoord);
+        human.processResponseFromOtherPlayer(playerGuessCoord, response);
+
+        // computer guesses a coordinate...handle this guess
+        int[] computerGuessCoord = armada.generateGuess();
+        response = human.processRequestFromOtherPlayer(computerGuessCoord);
+        armada.processResponseFromOtherPlayer(computerGuessCoord, response);
+
+        // draw the updated boards on the screen
+        drawUpperBoard();
+        drawLowerBoard();
+    }
 
     /**
      *
@@ -249,11 +324,60 @@ class GameLoopStage extends Stage {
 //        if(mode.equals("god")){
 //            // play omnisciently
 //        }
+        // make two player instances
+        human = new Player("player", edgeSize);
+        armada = new Computer(edgeSize);
+
+        // fill player instances with lowerboards and upper boards
+        LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), shipBoard);
+        human.setLowerBoard(lb);
+
+        LowerBoard lb2 = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), armada.generateShipBoard(edgeSize, mode));
+        armada.setLowerBoard(lb2);
+
         x = new Label("You've chosen to play a game in " + mode + " mode.");
-        y.getChildren().add(x);
-        this.setScene(new Scene(y, 300, 300));
+        vb.getChildren().add(x);
+
+        // make an upper board
+        for(int i = 0; i< edgeSize; i++){
+            for(int j = 0; j<edgeSize; j++){
+                Rectangle r = new Rectangle();
+                r.setWidth(50);
+                r.setHeight(50);
+                r.setId("Upper;" + j + ";" + i);
+
+                Button b = new Button("", r);
+
+                EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+
+                        String eventID = e.getPickResult().getIntersectedNode().getId(); // this trick from: https://stackoverflow.com/a/42430200
+                        System.out.println(eventID);
+
+                        b.setDisable(true); // because has already been guessed
+                        masterHandler(eventID); // this class will take care of turning cells the right color
+                    }
+                };
+                r.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+                gpArrayUpperBoard[i][j] = r;
+
+                // actually add the elements to the GUI layout
+                gpUpperBoard.add(r, i, j, 1, 1);
+                gpUpperBoard.add(b, i, j, 1, 1);
+            }
+        }
+
+        this.setScene(new Scene(vb, 500, 500));
         this.show();
 
+    }
+}
+
+class postGameStage extends Stage{
+    postGameStage(LowerBoard humanLowerBoard, LowerBoard computerLowerBoard){
+        System.out.println("Display both boards in this stage.");
     }
 }
 

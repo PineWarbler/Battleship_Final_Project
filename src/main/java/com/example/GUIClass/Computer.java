@@ -30,7 +30,10 @@ public class Computer extends Player{
     }
 
 
-
+    public ShipBoard generateShipBoard(int edgeSize, String mode){
+        // TODO: generate a starting board according to the mode: stupid, smart, or god-mode
+        return new ShipBoard(edgeSize);
+    }
 
 
 
