@@ -3,11 +3,10 @@ package com.example.GUIClass;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
@@ -71,7 +72,7 @@ class SettingsStage extends Stage {
                 new ShipPlacerStage(mode);
             }
         });
-        this.setScene(new Scene(vb, 500, 500));
+        this.setScene(new Scene(vb, 300, 300));
         this.show();
     }
 }
@@ -231,13 +232,19 @@ class ShipPlacerStage extends Stage{
         }
         // the `mode` parameter only here to be forwarded to the GameLoopStage
 //        x.getChildren().add(openOther);
-        this.setScene(new Scene(vb, 300, 300));
+        vb.setAlignment(Pos.CENTER);
+        gp.setAlignment(Pos.CENTER);
+        hb.setAlignment(Pos.CENTER);
+        this.setScene(new Scene(vb));
+        this.setMaximized(true);
         this.show();
 //        openOther.setOnAction(t -> new GameLoopStage(mode));
     }
 }
 
 class GameLoopStage extends Stage {
+
+    int gameCellWidthHeight = 20; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
     Player human;
     Computer armada;
 
@@ -265,11 +272,18 @@ class GameLoopStage extends Stage {
                 // also add a red dot to signify a hit on the lower board
                 if(human.lowerBoard.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.HIT){
                     Circle c = new Circle();
-                    double radius = 15;
+                    double radius = (gameCellWidthHeight / 2.0) * 0.666; // size is dependent on cell size
                     c.setRadius(radius);
                     c.setFill(Color.RED);
                     gpLowerBoard.add(c, i, j, 1, 1);
 //                    gp.add(c, GridPane.getColumnIndex(r), GridPane.getRowIndex(r), 1,1);
+                    // TODO: remove this else-if block when done debugging
+                } else if(human.lowerBoard.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.MISS){
+                    Circle c = new Circle();
+                    double radius = (gameCellWidthHeight / 2.0) * 0.666; // size is dependent on cell size
+                    c.setRadius(radius);
+                    c.setFill(Color.WHITE);
+                    gpLowerBoard.add(c, i, j, 1, 1);
                 }
             }
         }
@@ -289,16 +303,10 @@ class GameLoopStage extends Stage {
         }
     }
 
-    public void masterHandler(String buttonGuessID){
+    public void masterHandler(String buttonGuessID) {
         // parse the buttonID for its coordinates
         ElementIDParser idParser = new ElementIDParser();
         ElementData data = idParser.parseID(buttonGuessID);
-
-        if(human.hasLost() || armada.hasLost()){
-            Stage s = (Stage) gpUpperBoard.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
-            s.close();
-            new postGameStage(human.lowerBoard, armada.lowerBoard); // let user see both/opposing side's ship positions
-        }
 
         // human guesses a coordinate...handle this guess
         int[] playerGuessCoord = new int[]{data.getRow(), data.getCol()};
@@ -313,6 +321,37 @@ class GameLoopStage extends Stage {
         // draw the updated boards on the screen
         drawUpperBoard();
         drawLowerBoard();
+
+        if(human.hasLost() || armada.hasLost()){
+            // disable further clicking
+            gpUpperBoard.setDisable(true);
+            gpLowerBoard.setDisable(true);
+
+            // announce the winner with big words
+            x.setFont(new Font("Arial", 30));
+            if(human.hasLost()) {
+                x.setText("The computer has won!");
+            } else{
+                x.setText("Congratulations! You've won!");
+            }
+
+            // make more button actions available
+            Button viewOther = new Button("View Opponent's Board");
+            viewOther.setOnAction(actionEvent -> {
+                new postGameStage(human.lowerBoard, armada.lowerBoard); // let user see both/opposing side's ship positions
+            });
+
+            Button quit = new Button("Quit");
+            quit.setOnAction(actionEvent -> {
+                Stage s = (Stage) gpUpperBoard.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
+                s.close();
+            });
+            HBox hb2 = new HBox();
+            hb2.setAlignment(Pos.CENTER);
+            hb2.getChildren().addAll(quit, viewOther);
+            vb.getChildren().add(hb2);
+
+        }
     }
 
     /**
@@ -335,15 +374,18 @@ class GameLoopStage extends Stage {
         LowerBoard lb2 = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), armada.generateShipBoard(edgeSize, mode));
         armada.setLowerBoard(lb2);
 
+        // TODO: remove this line once Computer.generateGuess() has been implemented!
+        armada.getLowerBoard().getShipBoard().insertShip(new int[]{0,0}, 'E', new Ship(5));
+
         x = new Label("You've chosen to play a game in " + mode + " mode.");
         vb.getChildren().add(x);
 
-        // make an upper board
+        // make an upper board. this needs to be clickable
         for(int i = 0; i< edgeSize; i++){
             for(int j = 0; j<edgeSize; j++){
                 Rectangle r = new Rectangle();
-                r.setWidth(50);
-                r.setHeight(50);
+                r.setWidth(gameCellWidthHeight);
+                r.setHeight(gameCellWidthHeight);
                 r.setId("Upper;" + j + ";" + i);
 
                 Button b = new Button("", r);
@@ -356,7 +398,9 @@ class GameLoopStage extends Stage {
                         System.out.println(eventID);
 
                         b.setDisable(true); // because has already been guessed
+
                         masterHandler(eventID); // this class will take care of turning cells the right color
+
                     }
                 };
                 r.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -369,7 +413,55 @@ class GameLoopStage extends Stage {
             }
         }
 
-        this.setScene(new Scene(vb, 500, 500));
+        // make a lower board. this does not need to be clickable.
+        for(int i = 0; i< edgeSize; i++){
+            for(int j = 0; j<edgeSize; j++){
+                Rectangle r = new Rectangle();
+                r.setWidth(gameCellWidthHeight);
+                r.setHeight(gameCellWidthHeight);
+                r.setFill(Color.BLACK);
+//                r.setId("Lower;" + j + ";" + i); // haha. don't even need event handlers!!!
+
+                Button b = new Button("", r);
+                b.setAlignment(Pos.CENTER); // has no effect
+                b.setContentDisplay(ContentDisplay.CENTER); // has no effect; this trick from: https://stackoverflow.com/a/18143660
+                b.setAlignment(Pos.BASELINE_CENTER); // has no effect; from: https://stackoverflow.com/a/11600380
+
+//                EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent e) {
+//
+//                        String eventID = e.getPickResult().getIntersectedNode().getId(); // this trick from: https://stackoverflow.com/a/42430200
+//                        System.out.println(eventID);
+//
+//                        b.setDisable(true); // because has already been guessed
+//                        masterHandler(eventID); // this class will take care of turning cells the right color
+//                    }
+//                };
+//                r.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+                gpArrayLowerBoard[i][j] = r;
+
+                // actually add the elements to the GUI layout
+                gpLowerBoard.add(r, i, j, 1, 1);
+                gpLowerBoard.add(b, i, j, 1, 1); // still render buttons to preserve same spacing as upper board
+            }
+        }
+
+
+        vb.getChildren().add(gpUpperBoard);
+        vb.getChildren().add(new Label("")); // blank line is to delineate between boards
+        vb.getChildren().add(gpLowerBoard);
+
+        // set all to center alignment
+        vb.setAlignment(Pos.CENTER);
+        gpLowerBoard.setAlignment(Pos.CENTER);
+        gpUpperBoard.setAlignment(Pos.CENTER);
+
+        // on first load, render lowerBoard
+        drawLowerBoard();
+        this.setScene(new Scene(vb));
+        this.setMaximized(true);
         this.show();
 
     }
