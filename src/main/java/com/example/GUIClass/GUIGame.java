@@ -1,8 +1,10 @@
 package com.example.GUIClass;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -32,7 +35,11 @@ public class GUIGame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop
+//        // to facilitate testing the later windows, will start off sequence at later link in chain
+//        LowerBoard humanLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
+//        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
+//        new postGameStage(humanLB, computerLB);
+         new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
 
@@ -258,7 +265,7 @@ class GameLoopStage extends Stage {
 
 
     /**
-     * draws the positions of ships whose positions have already been confirmed
+     * draws the lowerBoard, which includes ships and hit locations
      */
     public void drawLowerBoard(){
         for(int i = 0; i<edgeSize; i++){
@@ -468,8 +475,86 @@ class GameLoopStage extends Stage {
 }
 
 class postGameStage extends Stage{
+    VBox vb;
+    GridPane computerGP;
+    GridPane humanGP;
+    double postGameCellWidthHeight;
+
+    /**
+     * draws the lowerBoard, which includes ships and hit locations
+     */
+    public void drawLowerBoard(LowerBoard lb, GridPane gp){
+        for(int i = 0; i<edgeSize; i++){
+            for(int j = 0; j<edgeSize; j++){
+                Rectangle r = new Rectangle((double) postGameCellWidthHeight, (double) postGameCellWidthHeight);
+                r.setStroke(Color.WHITE);
+                if(lb.getShipBoard().getHashArray()[j][i] != ShipBoard.emptyHash){ // don't know why switching indices works, but it does...
+                    r.setFill(Color.PURPLE);
+
+                } else {
+                    r.setFill(Color.BLACK);
+                }
+                gp.add(r, i, j, 1,1); // add the rectangle after deciding color
+
+                Circle c = new Circle();
+                double radius = (postGameCellWidthHeight / 2.0) * 0.666; // size is dependent on cell size
+                c.setRadius(radius);
+                // also add a red dot to signify a hit on the lower board
+                if(lb.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.HIT){
+                    c.setFill(Color.RED);
+                    gp.add(c, i, j, 1,1); // add circle
+                } else if(lb.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.MISS){
+                    c.setFill(Color.WHITE);
+                    gp.add(c, i, j, 1,1); // add circle
+                }
+
+            }
+        }
+    }
+
     postGameStage(LowerBoard humanLowerBoard, LowerBoard computerLowerBoard){
+
+        vb = new VBox();
+
+        humanGP = new GridPane();
+        humanGP.setAlignment(Pos.CENTER);
+
+        computerGP = new GridPane();
+        computerGP.setAlignment(Pos.CENTER);
+
+        postGameCellWidthHeight = 30.0f;
+
         System.out.println("Display both boards in this stage.");
+        Label title = new Label("Post-Game Review");
+        title.setFont(new Font("Arial", 30));
+
+        Label humanBoardLabel = new Label("Your Lower Board:");
+        humanBoardLabel.setFont(new Font("Arial", 20));
+
+        Label computerBoardLabel = new Label("Your Opponent's Lower Board:");
+        computerBoardLabel.setFont(new Font("Arial", 20));
+
+        vb.setAlignment(Pos.CENTER);
+
+        Button quit = new Button("Exit");
+        quit.setOnAction(actionEvent -> Platform.exit());
+
+        // fill the gridpanes with ships and hits/misses
+        drawLowerBoard(computerLowerBoard, computerGP);
+        drawLowerBoard(humanLowerBoard, humanGP);
+
+        // put the board titles with their respective boards
+        VBox computerVB = new VBox(computerBoardLabel, computerGP);
+        VBox humanVB = new VBox(humanBoardLabel, humanGP);
+
+        HBox boardsRow = new HBox(computerVB, new Label("\t\t"), humanVB); // the empty label is for blank space
+        boardsRow.setAlignment(Pos.CENTER);
+
+        vb.getChildren().addAll(title, boardsRow, quit);
+
+        this.setScene(new Scene(vb));
+        this.setMaximized(true);
+        this.show();
     }
 }
 
