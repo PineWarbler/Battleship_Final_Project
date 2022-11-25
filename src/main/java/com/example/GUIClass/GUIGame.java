@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -35,8 +36,12 @@ public class GUIGame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-//        // to facilitate testing the later windows, will start off sequence at later link in chain
+//      //   to facilitate testing the later windows, will start off sequence at later link in chain
 //        LowerBoard humanLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
+//        HitOrMissHistoryBoard hb = humanLB.getHistBoard();
+//        hb.markAsMissed(new int[]{1,1});
+//        hb.markAsHit(new int[]{2,2});
+//
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
          new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
@@ -283,7 +288,8 @@ class GameLoopStage extends Stage {
                     c.setRadius(radius);
                     c.setFill(Color.RED);
                     gpLowerBoard.add(c, i, j, 1, 1);
-//                    gp.add(c, GridPane.getColumnIndex(r), GridPane.getRowIndex(r), 1,1);
+                    GridPane.setHalignment(c, HPos.CENTER);
+
                     // TODO: remove this else-if block when done debugging
                 } else if(human.lowerBoard.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.MISS){
                     Circle c = new Circle();
@@ -291,6 +297,7 @@ class GameLoopStage extends Stage {
                     c.setRadius(radius);
                     c.setFill(Color.WHITE);
                     gpLowerBoard.add(c, i, j, 1, 1);
+                    GridPane.setHalignment(c, HPos.CENTER);
                 }
             }
         }
@@ -503,9 +510,11 @@ class postGameStage extends Stage{
                 if(lb.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.HIT){
                     c.setFill(Color.RED);
                     gp.add(c, i, j, 1,1); // add circle
+                    GridPane.setHalignment(c, HPos.CENTER);
                 } else if(lb.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.MISS){
                     c.setFill(Color.WHITE);
                     gp.add(c, i, j, 1,1); // add circle
+                    GridPane.setHalignment(c, HPos.CENTER);
                 }
 
             }
