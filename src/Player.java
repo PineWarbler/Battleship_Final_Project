@@ -9,7 +9,7 @@ public class Player {
     protected LowerBoard lowerBoard;
     protected HitOrMissHistoryBoard upperBoard;
 
-    private ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
+    protected ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
 
 
     /**
