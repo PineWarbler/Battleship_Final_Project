@@ -64,21 +64,18 @@ public class Player {
      * @param coord is the guessed coordinate
      * @return whether the coord is a hit or a miss <b>(should not return `NONE` enum type!)</b>
      */
-    public cellStatus processRequestFromOtherPlayer(int[] coord){
+    public ResponsePacket processRequestFromOtherPlayer(int[] coord){
         cellStatus status =this.lowerBoard.processIncomingGuess(coord);
 
-        if(this.lowerBoard.getShipBoard().isShip(coord)){
-            if(this.lowerBoard.getShipBoard().identifyShip(coord).isShipSunk()){
+        if(this.lowerBoard.getShipBoard().isShip(coord)) {
+            if (this.lowerBoard.getShipBoard().identifyShip(coord).isShipSunk()) {
                 sunkShip = true;
-                sunkShipSize=this.lowerBoard.getShipBoard().identifyShip(coord).getLength();
+                sunkShipSize = this.lowerBoard.getShipBoard().identifyShip(coord).getLength();
+                return new ResponsePacket(status, sunkShipSize);
             }
 
-
         }
-
-
-
-        return status;
+        return new ResponsePacket(status);
     } //sout here maybe?
 
     /**

@@ -267,10 +267,11 @@ public class ConsoleDriver {
                 currPlayersGuess = getUsersGuess(askingPlayer);
             }
 
-            cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
+            ResponsePacket rp = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
+            cellStatus cs = rp.getCellStatus();
             //System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
             if(respondingPlayer.sunkShip && (respondingPlayer.getName().equals("Armada"))){
-                System.out.println("Ship sunk!");
+                System.out.println("Ship of length " + rp.getSunkShipLength() + " was sunk!");
             }
 
             if(respondingPlayer.sunkShip && !(respondingPlayer.getName().equals("Armada"))){

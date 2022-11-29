@@ -328,12 +328,12 @@ class GameLoopStage extends Stage {
 
         // human guesses a coordinate...handle this guess
         int[] playerGuessCoord = new int[]{data.getRow(), data.getCol()};
-        cellStatus response = armada.processRequestFromOtherPlayer(playerGuessCoord);
+        cellStatus response = armada.processRequestFromOtherPlayer(playerGuessCoord).getCellStatus();
         human.processResponseFromOtherPlayer(playerGuessCoord, response);
 
         // computer guesses a coordinate...handle this guess
         int[] computerGuessCoord = armada.generateGuess();
-        response = human.processRequestFromOtherPlayer(computerGuessCoord);
+        response = human.processRequestFromOtherPlayer(computerGuessCoord).getCellStatus();
         armada.processResponseFromOtherPlayer(computerGuessCoord, response);
 
         // draw the updated boards on the screen
