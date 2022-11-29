@@ -1,18 +1,10 @@
+package com.example.GUIClass;
+
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.TreeMap;
+// test comment to new branch
 
 public class ConsoleDriver {
-
-
-    static TreeMap<Character, Integer> rowMap = new TreeMap<Character, Integer>();
-
-
-    static TreeMap<Integer, Integer> colMap = new TreeMap<Integer, Integer>();
-
-
-
-
     static final int edgeSize = 10;
     /**
      * allows user to input ship locations via the console
@@ -24,37 +16,13 @@ public class ConsoleDriver {
 
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 
-
-        TreeMap<Character, Integer> rowMap = new TreeMap<Character, Integer>();
-        for(char c = 'A'; c<'H'; c++){
-            rowMap.put(c, ((int) c) - 65);
-        }
-
-        TreeMap<Integer, Integer> colMap = new TreeMap<Integer, Integer>();
-        for(int k = 1; k<11; k++){
-            colMap.put(k,k-1);
-        }
-
-
-
         Scanner sc = new Scanner(System.in);
+        System.out.println("-- Choose the Locations of " + p.getName() + " 's ships--");
         for(int i = 0; i<allowedShipLengths.length; i++) {
-            lb.getShipBoard().printBoard();
-            System.out.println("-- Choose the Location of ship length " + allowedShipLengths[i] + "--");
-            System.out.println("Enter row pivot coordinate (A-J): ");
-
-
-
-
-            int pivRow = rowMap.get(sc.next().charAt(0));
-
-
-            System.out.println("Enter column pivot coordinate (1-10): ");
-
-
-
-            int pivCol = colMap.get(sc.nextInt());
-
+            System.out.println("Enter row pivot coordinate: ");
+            int pivRow = sc.nextInt();
+            System.out.println("Enter column pivot coordinate: ");
+            int pivCol = sc.nextInt();
             System.out.println("Enter pivot direction (N,S,E,or W): ");
             char pivDir = sc.next().charAt(0);
 
@@ -79,29 +47,10 @@ public class ConsoleDriver {
      */
     public static Player setUpAuto(Player p, int[] allowedShipLengths) {
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
-
-
-        Ship newShip = new Ship(allowedShipLengths[0]);
-        lb.getShipBoard().insertShip(new int[]{1, 3}, 'E', newShip);
-
-        newShip = new Ship(allowedShipLengths[1]);
-        lb.getShipBoard().insertShip(new int[]{1, 9}, 'S', newShip);
-
-        newShip = new Ship(allowedShipLengths[2]);
-        lb.getShipBoard().insertShip(new int[]{3, 6}, 'W', newShip);
-
-        newShip = new Ship(allowedShipLengths[3]);
-        lb.getShipBoard().insertShip(new int[]{6, 5}, 'S', newShip);
-
-        newShip = new Ship(allowedShipLengths[4]);
-        lb.getShipBoard().insertShip(new int[]{8, 1}, 'E', newShip);
-
-
-
-
-
-
-
+        for(int i = 0; i<allowedShipLengths.length; i++) {
+            Ship newShip = new Ship(allowedShipLengths[i]);
+            lb.getShipBoard().insertShip(new int[]{i, 0}, 'E', newShip);
+        }
         p.setLowerBoard(lb);
         HitOrMissHistoryBoard ub = new HitOrMissHistoryBoard(edgeSize);
         p.setUpperBoard(ub);
@@ -117,15 +66,10 @@ public class ConsoleDriver {
         Scanner sc = new Scanner(System.in);
         boolean validInput = false;
         while(!validInput) {
-
-            System.out.println("Enter row letter of guess: ");
-            char rowChar = sc.next().charAt(0);
-
-
-
             System.out.println("Enter column number of guess: ");
             int colNum = sc.nextInt();
-
+            System.out.println("Enter row letter of guess: ");
+            char rowChar = sc.next().charAt(0);
 
             // check to see if guess is a valid character and if it's not been guessed before; otherwise, ask until valid input
             int[] potentialGuess = new int[]{rowChar - 65, colNum-1}; // -1 to revert to zero-based indexing
@@ -157,17 +101,6 @@ public class ConsoleDriver {
 
     public static void main(String[] args) {
 
-        for(char c = 'A'; c<'H'; c++){
-            rowMap.put(c, ((int) c) - 65);
-        }
-
-        for(int k = 1; k<11; k++){
-            colMap.put(k,k-1);
-        }
-
-
-
-
         // DO NOT NEED THIS
 
 
@@ -188,12 +121,13 @@ public class ConsoleDriver {
 
         p1.setName(getUserName(p1));
 
-        int[] allowedShipLengths = new int[]{ 5, 4, 3, 3, 2};
+        int[] allowedShipLengths = new int[]{5, 4, 3, 3, 2};
 
         // get opening board positions for both players
         p1 = setUpAuto(p1, allowedShipLengths);
         p1.getLowerBoard().printBoard();
 
+        p2 = (Computer) setUpAuto(p2, allowedShipLengths);
         p2.getLowerBoard().printBoard();
 
         Player askingPlayer = p1; // or can choose randomly who goes first
@@ -204,7 +138,7 @@ public class ConsoleDriver {
             int[] currPlayersGuess;
             if(askingPlayer.getName().equals("Armada")){
                 currPlayersGuess = p2.generateGuess();
-                System.out.println(askingPlayer.getName() + " guesses " + ((char) (currPlayersGuess[0] + 65)) + (currPlayersGuess[1]+1));
+                System.out.println(askingPlayer.getName() + " guesses " + Arrays.toString(currPlayersGuess));
             } else {
                 System.out.println("Upper Board:");
                 askingPlayer.upperBoard.printBoard();

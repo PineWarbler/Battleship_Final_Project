@@ -1,3 +1,5 @@
+package com.example.GUIClass;
+
 public class LowerBoard {
     // `LowerBoard` has both a `HitOrMissHistoryBoard` and a `ShipBoard`.
     // Analogous to real-life game setup.
@@ -66,6 +68,14 @@ public class LowerBoard {
      */
     public ShipBoard getShipBoard(){
         return this.shipBoard;
+    }
+
+    public void setShipBoard(ShipBoard shipBoard){
+        this.shipBoard = shipBoard;
+    }
+
+    public HitOrMissHistoryBoard getHistBoard(){
+        return this.histBoard;
     }
 
     /**
