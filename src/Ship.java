@@ -2,6 +2,7 @@ public class Ship {
     private int health; // how many segments of ship are not hit
     private int length; // how many segments ship occupies
     int[] bowCoord, sternCoord; // these are necessary to determine the direction in which the ship is pointed (could be one of two directions)
+    private boolean shipSunk;
 
     /**
      *Ship constructor
@@ -14,11 +15,13 @@ public class Ship {
         this.length = length;
         this.bowCoord = bowCoord;
         this.sternCoord = sternCoord;
+        shipSunk = false;
     }
 
     public Ship(int length){
         this.length = length;
         this.health = length;
+        shipSunk=false;
     }
 
     /**
@@ -26,7 +29,16 @@ public class Ship {
      */
     public void decrementHealth(){
         this.health--;
+        if(this.health==0){
+            shipSunk=true;
+        }
     } //maybe at sout here?
+
+
+
+    public boolean isShipSunk(){
+        return shipSunk;
+    }
 
     /**
      * gets the health of the player
@@ -35,7 +47,6 @@ public class Ship {
     public int getHealth(){
         return this.health;
     }
-
 
     /**
      * Gets the hash ID of the ships

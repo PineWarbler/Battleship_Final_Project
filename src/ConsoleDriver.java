@@ -155,6 +155,22 @@ public class ConsoleDriver {
         return sc.next();
     }
 
+    public static Difficulty getDifficulty() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter computer difficulty (EASY, MEDIUM, HARD): ");
+        Difficulty diff = Difficulty.NONE;
+        boolean finished = false;
+        while (!finished) {
+            try {
+                return Difficulty.valueOf(sc.next());
+            } catch (Exception ignored) {}
+            System.out.println("Invalid input! Please enter EASY, MEDIUM, or HARD: ");
+        }
+
+        return Difficulty.NONE;
+    }
+
+
     public static void main(String[] args) {
 
         for(char c = 'A'; c<'H'; c++){
@@ -184,9 +200,14 @@ public class ConsoleDriver {
 
         // create two player objects
         Player p1=new Player("bob", edgeSize);
-        Computer p2 = new Computer(edgeSize); // the other player should be a computer (but that's not completed yet)
+
 
         p1.setName(getUserName(p1));
+
+
+
+        Difficulty diff = getDifficulty();
+        Computer p2 = new Computer(edgeSize,diff);
 
         int[] allowedShipLengths = new int[]{ 5, 4, 3, 3, 2};
 
@@ -215,6 +236,18 @@ public class ConsoleDriver {
 
             cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
             System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
+            if(respondingPlayer.sunkShip && (respondingPlayer.getName().equals("Armada"))){
+                System.out.println("Ship sunk!");
+            }
+
+            if(respondingPlayer.sunkShip && !(respondingPlayer.getName().equals("Armada"))){
+
+                askingPlayer.updateShipList(respondingPlayer.sunkShipSize);
+            }
+            respondingPlayer.sunkShip=false;
+
+
+
             askingPlayer.processResponseFromOtherPlayer(currPlayersGuess, cs);
 
 
@@ -226,7 +259,18 @@ public class ConsoleDriver {
                 respondingPlayer = p2;
             }
         }
+
+        System.out.println(p1.getName() + "'s Ship Board");
+        p1.getLowerBoard().getShipBoard().printBoard();
+
+        System.out.println(p2.getName() + "'s Ship Board");
+        p2.getLowerBoard().getShipBoard().printBoard();
+
         System.out.println(respondingPlayer.getName() + " has won!");
+
+
+
+
 
     }
 

@@ -1,6 +1,8 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Player {
 
@@ -11,6 +13,9 @@ public class Player {
     protected HitOrMissHistoryBoard upperBoard;
 
     protected ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
+
+    protected boolean sunkShip;
+    protected int sunkShipSize;
 
 
     /**
@@ -24,6 +29,8 @@ public class Player {
         this.lowerBoard = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
         this.upperBoard = new HitOrMissHistoryBoard(edgeSize);
         alreadyGuessed = new ArrayList<>();
+        sunkShip = false;
+        sunkShipSize = 0;
     }
 
     /**
@@ -56,7 +63,20 @@ public class Player {
      * @return whether the coord is a hit or a miss <b>(should not return `NONE` enum type!)</b>
      */
     public cellStatus processRequestFromOtherPlayer(int[] coord){
-        return this.lowerBoard.processIncomingGuess(coord);
+        cellStatus status =this.lowerBoard.processIncomingGuess(coord);
+
+        if(this.lowerBoard.getShipBoard().isShip(coord)){
+            if(this.lowerBoard.getShipBoard().identifyShip(coord).isShipSunk()){
+                sunkShip = true;
+                sunkShipSize=this.lowerBoard.getShipBoard().identifyShip(coord).getLength();
+            }
+
+
+        }
+
+
+
+        return status;
     } //sout here maybe?
 
     /**
@@ -100,4 +120,6 @@ public class Player {
     public int getHealth() {
         return this.lowerBoard.getHealth();
     }
+
+    public void updateShipList(int size){} //empty method here, so it can be overridden in computer
 }

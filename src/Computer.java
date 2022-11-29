@@ -11,14 +11,22 @@ public class Computer extends Player{
     private ArrayList<int[]> lastHits;
     private ArrayList<int[]> tempPossibleMoves;
 
-    boolean missFlag;
+    private boolean missFlag;
+
+    private final Difficulty diff;
+
+
+    private ArrayList<int[]> searchMatrix;
+
+    private TreeSet<Integer> shipLengths;
+
 
 
     /**
      * Constructor for the Computer class
      */
     //Constructs a computer as "armada." Creates possible moves.
-    public Computer(int edgeSize) {
+    public Computer(int edgeSize, Difficulty diff) {
         super("Armada", edgeSize);
         this.boardSize = edgeSize;
 //        alreadyGuessed = new ArrayList<>();
@@ -30,12 +38,34 @@ public class Computer extends Player{
         lastHits=new ArrayList<>();
         tempPossibleMoves = new ArrayList<>();
         missFlag = false;
+        this.diff=diff;
+        shipLengths=new TreeSet<>(List.of(5,4,3,3,2));
+
+
         for(int i = 0;i<edgeSize;i++){
             for(int j = 0; j<edgeSize;j++){
                 possibleMoves.add( new int[]{i,j});
                 possibleShipLocations.add(new int[]{i,j});
             }
         }
+        searchMatrix = new ArrayList<>();
+        for(int i = 0;i<edgeSize;i=i+2){
+            for(int j = 0; j<edgeSize;j=j+2){
+                searchMatrix.add(new int[]{i,j});
+            }
+        }
+
+        for(int i = 1;i<edgeSize;i=i+2){
+            for(int j = 1; j<edgeSize;j=j+2){
+                searchMatrix.add(new int[]{i,j});
+            }
+        }
+
+        for(int[] i : searchMatrix){
+            System.out.println(Arrays.toString(i));
+        }
+
+
         generateShipBoard();
     }
 
@@ -205,69 +235,9 @@ public class Computer extends Player{
         //System.out.println("hits" + consecutiveHits);
 
 
-
-        if((consecutiveHits>1 && consecutiveHits<6) &&missFlag && tempPossibleMoves.size()!=0){
-            //possibleMoves.remove(lastEndGuess);
-
-            //System.out.println("used flag");
-            removeCoord(tempPossibleMoves.get(0),possibleMoves);
-            alreadyGuessed.add(tempPossibleMoves.get(0));
-            missFlag = false;
-            int[] tempCoord = tempPossibleMoves.get(0);
-
-            generateTempPossibleMoves();
-            return tempCoord;
-
-
-
-        }else if(consecutiveHits==1 && missFlag){
+        if(diff==Difficulty.EASY){
             Random rnd = new Random();
-            int ran = rnd.nextInt(tempPossibleMoves.size());
-
-            removeCoord(tempPossibleMoves.get(ran),possibleMoves);
-            alreadyGuessed.add(tempPossibleMoves.get(ran));
-
-            int[] tempCoord = tempPossibleMoves.get(ran);
-            tempPossibleMoves.remove(ran);
-
-
-
-            generateTempPossibleMoves();
-            return tempCoord;
-        }
-
-
-
-        //generateTempPossibleMoves();
-
-
-        Random rnd = new Random();
-        int ran = 0;
-
-
-
-
-        if (tempPossibleMoves.size() > 1) {
-            //System.out.println("size over 1");
-            ran = rnd.nextInt(tempPossibleMoves.size());
-            //possibleMoves.remove(tempPossibleMoves.get(ran));
-            removeCoord(tempPossibleMoves.get(ran),possibleMoves);
-            int[] tempCoord = tempPossibleMoves.get(ran);
-
-//            if((tempPossibleMoves.size()==2) && (consecutiveHits>1 && consecutiveHits<6)){
-//                System.out.println("hits" + consecutiveHits);
-//
-//                endFlag = true;
-//                tempPossibleMoves.remove(ran);
-////                lastEndGuess = tempPossibleMoves.get(0);
-//                //System.out.println(Arrays.toString(lastEndGuess));
-//            }
-            tempPossibleMoves.remove(ran);
-
-            alreadyGuessed.add(tempCoord);
-            return tempCoord;
-        } else if (tempPossibleMoves.size() == 0) {
-            //System.out.println("size is 0");
+            int ran = 0;
             if (possibleMoves.size() > 0) {
                 ran = rnd.nextInt(possibleMoves.size());
             }
@@ -277,15 +247,168 @@ public class Computer extends Player{
             possibleMoves.remove(ran);
             return guess;
 
-        } else {
-            //System.out.println("else");
-            //possibleMoves.remove(tempPossibleMoves.get(ran));
-            removeCoord(tempPossibleMoves.get(ran),possibleMoves);
-            alreadyGuessed.add(tempPossibleMoves.get(ran));
-            int[] tempCoord = tempPossibleMoves.get(ran);
-            tempPossibleMoves.remove(ran);
+        }
+        else if(diff==Difficulty.MEDIUM){
+            if ((consecutiveHits > 1 && consecutiveHits < 6) && missFlag && tempPossibleMoves.size() != 0) {
+                //possibleMoves.remove(lastEndGuess);
 
-            return tempCoord;
+                //System.out.println("used flag");
+                removeCoord(tempPossibleMoves.get(0), possibleMoves);
+                alreadyGuessed.add(tempPossibleMoves.get(0));
+                missFlag = false;
+                int[] tempCoord = tempPossibleMoves.get(0);
+
+                generateTempPossibleMoves();
+                return tempCoord;
+
+
+            } else if (consecutiveHits == 1 && missFlag) {
+                Random rnd = new Random();
+                int ran = rnd.nextInt(tempPossibleMoves.size());
+
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                alreadyGuessed.add(tempPossibleMoves.get(ran));
+
+                int[] tempCoord = tempPossibleMoves.get(ran);
+                tempPossibleMoves.remove(ran);
+
+
+                generateTempPossibleMoves();
+                return tempCoord;
+            }
+
+
+            //generateTempPossibleMoves();
+
+
+            Random rnd = new Random();
+            int ran = 0;
+
+
+            if (tempPossibleMoves.size() > 1) {
+                //System.out.println("size over 1");
+                ran = rnd.nextInt(tempPossibleMoves.size());
+                //possibleMoves.remove(tempPossibleMoves.get(ran));
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                int[] tempCoord = tempPossibleMoves.get(ran);
+
+//            if((tempPossibleMoves.size()==2) && (consecutiveHits>1 && consecutiveHits<6)){
+//                System.out.println("hits" + consecutiveHits);
+//
+//                endFlag = true;
+//                tempPossibleMoves.remove(ran);
+////                lastEndGuess = tempPossibleMoves.get(0);
+//                //System.out.println(Arrays.toString(lastEndGuess));
+//            }
+                tempPossibleMoves.remove(ran);
+
+                alreadyGuessed.add(tempCoord);
+                return tempCoord;
+            } else if (tempPossibleMoves.size() == 0) {
+                //System.out.println("size is 0");
+                if (possibleMoves.size() > 0) {
+                    ran = rnd.nextInt(possibleMoves.size());
+                }
+
+                alreadyGuessed.add(possibleMoves.get(ran));
+                int[] guess = possibleMoves.get(ran);
+                possibleMoves.remove(ran);
+                return guess;
+
+            } else {
+                //System.out.println("else");
+                //possibleMoves.remove(tempPossibleMoves.get(ran));
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                alreadyGuessed.add(tempPossibleMoves.get(ran));
+                int[] tempCoord = tempPossibleMoves.get(ran);
+                tempPossibleMoves.remove(ran);
+
+                return tempCoord;
+            }
+        }else{
+            if ((consecutiveHits > 1 && consecutiveHits < 6) && missFlag && tempPossibleMoves.size() != 0) {
+                //possibleMoves.remove(lastEndGuess);
+
+                //System.out.println("used flag");
+                removeCoord(tempPossibleMoves.get(0), possibleMoves);
+                removeCoord(tempPossibleMoves.get(0), searchMatrix);
+                alreadyGuessed.add(tempPossibleMoves.get(0));
+                missFlag = false;
+                int[] tempCoord = tempPossibleMoves.get(0);
+
+                generateTempPossibleMoves();
+                return tempCoord;
+
+
+            } else if (consecutiveHits == 1 && missFlag) {
+                Random rnd = new Random();
+                int ran = rnd.nextInt(tempPossibleMoves.size());
+
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                removeCoord(tempPossibleMoves.get(ran), searchMatrix);
+                alreadyGuessed.add(tempPossibleMoves.get(ran));
+
+                int[] tempCoord = tempPossibleMoves.get(ran);
+                tempPossibleMoves.remove(ran);
+
+
+                generateTempPossibleMoves();
+                return tempCoord;
+            }
+
+
+            //generateTempPossibleMoves();
+
+
+            Random rnd = new Random();
+            int ran = 0;
+
+
+            if (tempPossibleMoves.size() > 1) {
+                //System.out.println("size over 1");
+                ran = rnd.nextInt(tempPossibleMoves.size());
+                //possibleMoves.remove(tempPossibleMoves.get(ran));
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                removeCoord(tempPossibleMoves.get(ran), searchMatrix);
+                int[] tempCoord = tempPossibleMoves.get(ran);
+                removeCoord(tempCoord,searchMatrix);
+
+//            if((tempPossibleMoves.size()==2) && (consecutiveHits>1 && consecutiveHits<6)){
+//                System.out.println("hits" + consecutiveHits);
+//
+//                endFlag = true;
+//                tempPossibleMoves.remove(ran);
+////                lastEndGuess = tempPossibleMoves.get(0);
+//                //System.out.println(Arrays.toString(lastEndGuess));
+//            }
+                tempPossibleMoves.remove(ran);
+
+
+                alreadyGuessed.add(tempCoord);
+                return tempCoord;
+            } else if (tempPossibleMoves.size() == 0) {
+                //System.out.println("size is 0");
+                if (searchMatrix.size() > 0) {
+                    ran = rnd.nextInt(searchMatrix.size());
+                }
+
+                alreadyGuessed.add(possibleMoves.get(ran));
+                int[] guess = searchMatrix.get(ran);
+                removeCoord(guess,possibleMoves);
+                searchMatrix.remove(ran);
+                return guess;
+
+            } else {
+                //System.out.println("else");
+                //possibleMoves.remove(tempPossibleMoves.get(ran));
+                removeCoord(tempPossibleMoves.get(ran), possibleMoves);
+                alreadyGuessed.add(tempPossibleMoves.get(ran));
+                int[] tempCoord = tempPossibleMoves.get(ran);
+                tempPossibleMoves.remove(ran);
+                removeCoord(tempCoord,searchMatrix);
+
+                return tempCoord;
+            }
         }
 
     }
@@ -328,6 +451,12 @@ public class Computer extends Player{
         }
     }
 
+@Override
+    public void updateShipList(int size){
+
+        shipLengths.remove(((Integer) size));
+        consecutiveHits=0;
+    }
 
 @Override
 public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatus){
@@ -341,7 +470,7 @@ public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatu
         generateTempPossibleMoves();
         missFlag = false;
 
-        if(consecutiveHits==5){//store ship sizes and remove or maybe not???
+        if((consecutiveHits==shipLengths.last())){//store ship sizes and remove or maybe not???
             consecutiveHits=0;
         }
     } else if (responseStatus==cellStatus.MISS){
@@ -350,7 +479,7 @@ public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatu
 //        if(!missFlag && (tempPossibleMoves.size()==0)){
 //            consecutiveHits=0;
 //        }
-        if((consecutiveHits>1 && consecutiveHits<6) && consecutiveMisses==2){
+        if((consecutiveHits>1) && consecutiveMisses==2){
             consecutiveHits=0;
         }
         else{
