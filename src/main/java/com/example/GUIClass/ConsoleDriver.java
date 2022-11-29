@@ -8,11 +8,6 @@ import java.util.TreeMap;
 public class ConsoleDriver {
 
 
-    static TreeMap<Character, Integer> rowMap = new TreeMap<Character, Integer>();
-
-
-    static TreeMap<Integer, Integer> colMap = new TreeMap<Integer, Integer>();
-
 
 
 
@@ -28,42 +23,84 @@ public class ConsoleDriver {
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 
 
-        TreeMap<Character, Integer> rowMap = new TreeMap<Character, Integer>();
-        for(char c = 'A'; c<'H'; c++){
-            rowMap.put(c, ((int) c) - 65);
-        }
-
-        TreeMap<Integer, Integer> colMap = new TreeMap<Integer, Integer>();
-        for(int k = 1; k<11; k++){
-            colMap.put(k,k-1);
-        }
-
 
 
         Scanner sc = new Scanner(System.in);
         for(int i = 0; i<allowedShipLengths.length; i++) {
+
+
+            boolean shipPossible = false;
+            int[] shipCoord = new int[2];
+            char pivDir = 'Q';
+
             lb.getShipBoard().printBoard();
-            System.out.println("-- Choose the Location of ship length " + allowedShipLengths[i] + "--");
-            System.out.println("Enter row pivot coordinate (A-J): ");
+            while(!shipPossible){
+
+                System.out.println("-- Choose the Location of ship length " + allowedShipLengths[i] + "--");
+                boolean finished = false;
+                char pivRow = 'Z';
+
+                System.out.println("Enter row pivot coordinate (A-J): ");
+                while (!finished) {
+                    try {
+                        pivRow = sc.next().charAt(0);
+                    } catch (Exception ignored) {
+                    }
+                    if (pivRow >= 'A' && pivRow <= 'J') {
+                        finished = true;
+                    } else {
+                        System.out.println("Invalid input! Please enter row A-J: ");
+                    }
+                }
+
+                System.out.println("Enter column pivot coordinate (1-10): ");
+                finished = false;
+                int pivCol = 100;
+                while (!finished) {
+                    try {
+                        pivCol = sc.nextInt();
+                    } catch (Exception ignored) {
+                    }
+                    if (pivCol >= 1 && pivCol <= 10) {
+                        finished = true;
+                    } else {
+                        System.out.println("Invalid input! Please enter column 1-10: ");
+                    }
+                }
 
 
+                shipCoord = new int[]{pivRow - 65, pivCol - 1};
 
 
-            int pivRow = rowMap.get(sc.next().charAt(0));
+                System.out.println("Enter pivot direction (N,S,E,or W): ");
+                finished = false;
+
+                while (!finished) {
+                    try {
+                        pivDir = sc.next().charAt(0);
+                    } catch (Exception ignored) {
+                    }
+                    if (pivDir == 'N' || pivDir == 'S' || pivDir == 'E' || pivDir == 'W') {
+                        finished = true;
+                    } else {
+                        System.out.println("Invalid input! Please enter direction N, S, E, or W: ");
+                    }
+                }
+
+                if ((lb.getShipBoard().isInBounds(lb.getShipBoard().convertFromPivotAndDirection(shipCoord, pivDir, allowedShipLengths[i]))) && (lb.getShipBoard().areCoordsUnoccupied(lb.getShipBoard().convertFromPivotAndDirection(shipCoord, pivDir, allowedShipLengths[i])))) {
+                    shipPossible = true;
+                }else{
+                    lb.getShipBoard().printBoard();
+                    System.out.println("Ship will not fit. Try again!");
+                }
 
 
-            System.out.println("Enter column pivot coordinate (1-10): ");
+            }
 
-
-
-            int pivCol = colMap.get(sc.nextInt());
-
-            System.out.println("Enter pivot direction (N,S,E,or W): ");
-            char pivDir = sc.next().charAt(0);
 
             Ship newShip = new Ship(allowedShipLengths[i]);
 
-            lb.getShipBoard().insertShip(new int[]{pivRow, pivCol}, pivDir, newShip);
+            lb.getShipBoard().insertShip(shipCoord, pivDir, newShip);
         }
         System.out.println("The final board looks like: ");
         lb.getShipBoard().printBoard();
@@ -176,13 +213,6 @@ public class ConsoleDriver {
 
     public static void main(String[] args) {
 
-        for(char c = 'A'; c<'H'; c++){
-            rowMap.put(c, ((int) c) - 65);
-        }
-
-        for(int k = 1; k<11; k++){
-            colMap.put(k,k-1);
-        }
 
 
 
@@ -215,7 +245,7 @@ public class ConsoleDriver {
         int[] allowedShipLengths = new int[]{ 5, 4, 3, 3, 2};
 
         // get opening board positions for both players
-        p1 = setUpAuto(p1, allowedShipLengths);
+        p1 = setUp(p1, allowedShipLengths);
         p1.getLowerBoard().printBoard();
 
         p2.getLowerBoard().printBoard();
@@ -224,11 +254,11 @@ public class ConsoleDriver {
         Player respondingPlayer = p2;
 
         while(!p1.hasLost() && !p2.hasLost()){
-            System.out.println("It's " + askingPlayer.getName() + "'s turn to guess.");
+            //System.out.println("It's " + askingPlayer.getName() + "'s turn to guess.");
             int[] currPlayersGuess;
             if(askingPlayer.getName().equals("Armada")){
                 currPlayersGuess = p2.generateGuess();
-                System.out.println(askingPlayer.getName() + " guesses " + ((char) (currPlayersGuess[0] + 65)) + (currPlayersGuess[1]+1));
+                //System.out.println(askingPlayer.getName() + " guesses " + ((char) (currPlayersGuess[0] + 65)) + (currPlayersGuess[1]+1));
             } else {
                 System.out.println("Upper Board:");
                 askingPlayer.upperBoard.printBoard();
@@ -238,7 +268,7 @@ public class ConsoleDriver {
             }
 
             cellStatus cs = respondingPlayer.processRequestFromOtherPlayer(currPlayersGuess);
-            System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
+            //System.out.println(askingPlayer.getName() + "'s guess was a " + cs);
             if(respondingPlayer.sunkShip && (respondingPlayer.getName().equals("Armada"))){
                 System.out.println("Ship sunk!");
             }
