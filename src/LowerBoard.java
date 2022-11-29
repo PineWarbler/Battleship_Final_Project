@@ -121,7 +121,7 @@ public class LowerBoard {
 //                            sb.append("\u001B[32m" + "O"+ "\033[0m");
 //                        }
                     else if(isShipInCell && (cs == cellStatus.NONE)){
-                        sb.append("\u001B[47m"+"\u001B[1m" + "⬜"+ "\033[0m");
+                        sb.append("\u001B[47m"+"\u001B[1m" + "□"+ "\033[0m");
                     }
 
                     else if(cs == cellStatus.MISS){

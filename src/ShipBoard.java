@@ -38,7 +38,7 @@ public class ShipBoard extends Board {
     /**
      * Checks each coordinate to see if all are unoccupied; otherwise returns false
      * @param coords
-     * @return whether the requested coordinates are unoccupied by another ship
+     * @return false if the requested coordinates are occupied by another ship
      */
     public boolean areCoordsUnoccupied(int[][] coords){
         for(int[] coord : coords){
@@ -241,8 +241,8 @@ public class ShipBoard extends Board {
                 for (int j = 1; j < super.edgeSize+1; j++) {
 
 
-                    if(this.hashArray[i-1][j-1]!=0){
-                        sb.append("\u001B[47m"+"\u001B[1m" + "⬜"+ "\033[0m");
+                    if(this.hashArray[i-1][j-1]!=17){
+                        sb.append("\u001B[47m"+"\u001B[1m" + "□"+ "\033[0m");
                     }
                     else{
                         sb.append(" ");

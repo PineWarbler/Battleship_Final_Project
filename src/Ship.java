@@ -26,7 +26,7 @@ public class Ship {
      */
     public void decrementHealth(){
         this.health--;
-    }
+    } //maybe at sout here?
 
     /**
      * gets the health of the player
