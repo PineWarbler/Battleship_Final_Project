@@ -383,7 +383,7 @@ class GameLoopStage extends Stage {
 //        }
         // make two player instances
         human = new Player("player", edgeSize);
-//        armada = new Computer(edgeSize); needs a difficulty now
+        armada = new Computer(edgeSize, mode); // will also generate a shipBoard during the object constructor process
 
         // fill player instances with lowerboards and upper boards
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), shipBoard);
@@ -392,8 +392,6 @@ class GameLoopStage extends Stage {
 //        LowerBoard lb2 = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), armada.generateShipBoard(edgeSize, mode));
 //        armada.setLowerBoard(lb2); //dont need this I think
 
-       // // TODO: remove this line once Computer.generateGuess() has been implemented!
-        //armada.getLowerBoard().getShipBoard().insertShip(new int[]{0,0}, 'E', new Ship(5));
 
         x = new Label("You've chosen to play a game in " + mode + " mode.");
         vb.getChildren().add(x);
