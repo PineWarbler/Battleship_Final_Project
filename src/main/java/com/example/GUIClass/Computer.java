@@ -1,3 +1,4 @@
+package com.example.GUIClass;
 import java.util.*;
 
 public class Computer extends Player{
@@ -61,9 +62,9 @@ public class Computer extends Player{
             }
         }
 
-        for(int[] i : searchMatrix){
-            System.out.println(Arrays.toString(i));
-        }
+//        for(int[] i : searchMatrix){
+//            System.out.println(Arrays.toString(i));
+//        }
 
 
         generateShipBoard();

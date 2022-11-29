@@ -1,3 +1,6 @@
+package com.example.GUIClass;
+
+
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.TreeMap;

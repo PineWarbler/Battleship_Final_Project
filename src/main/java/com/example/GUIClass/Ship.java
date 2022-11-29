@@ -1,3 +1,5 @@
+package com.example.GUIClass;
+
 public class Ship {
     private int health; // how many segments of ship are not hit
     private int length; // how many segments ship occupies
