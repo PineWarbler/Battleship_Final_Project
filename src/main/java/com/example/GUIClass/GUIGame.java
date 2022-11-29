@@ -73,7 +73,6 @@ class SettingsStage extends Stage {
                 Difficulty mode = Difficulty.NONE;
                 if (stoopitRadio.isSelected()) {
                     mode = Difficulty.EASY;
-                    System.out.println("Stoopit was selected.");
                 } else if (smartRadio.isSelected()) {
                     mode = Difficulty.MEDIUM;
                 } else if (godRadio.isSelected()) {
@@ -140,6 +139,10 @@ class ShipPlacerStage extends Stage{
         vb.getChildren().add(gp);
         vb.getChildren().add(done);
 
+        shipPrompt.setText("\tNow placing ship of length " + allowedShipLengths[0]); // prompt user to insert ship
+        shipPrompt.setAlignment(Pos.CENTER_LEFT);
+        shipPrompt.setFont(new Font("Arial", 20));
+
         // make these buttons disabled by default until ships are placed
         done.setDisable(true);
         confirmShipLocation.setDisable(true);
@@ -165,15 +168,18 @@ class ShipPlacerStage extends Stage{
             public void handle(ActionEvent actionEvent) {
                 confirmCount[0]++;
                 shipBoard.insertShip(potentialOccupancyCoords, potentialShip); // all the error checking has already been done
-//                System.out.println(Arrays.deepToString(potentialOccupancyCoords));
-//                System.out.println(Arrays.deepToString(shipBoard.getHashArray()));
+
                 confirmShipLocation.setDisable(true);
                 drawShipBoard(); // with newly added ship
+                if(confirmCount[0] < allowedShipLengths.length){
+                    shipPrompt.setText("\tNow placing ship of length " + allowedShipLengths[confirmCount[0]]); // update prompt to place next ship
+                }
 
                 if(confirmCount[0] == allowedShipLengths.length){
                     // then all the ships have been placed
                     rotate.setDisable(true);
                     done.setDisable(false);
+                    shipPrompt.setText(""); // no more prompts
                 }
             }
         });
@@ -182,7 +188,7 @@ class ShipPlacerStage extends Stage{
             @Override
             public void handle(ActionEvent actionEvent) {
                 done.setDisable(true); // only need to press done once!
-                shipBoard.printBoard();
+//                shipBoard.printBoard();
 //                System.out.println(Arrays.deepToString(shipBoard.getHashArray()));
                 Stage s = (Stage) hb.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
                 s.close();
@@ -202,12 +208,10 @@ class ShipPlacerStage extends Stage{
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent e) {
-                        System.out.println("Entering rect handler a12!");
                         drawShipBoard(); // draw all confirmed ships (erase any voided ship positions)
                         String eventID = e.getPickResult().getIntersectedNode().getId(); // this trick from: https://stackoverflow.com/a/42430200
-                        System.out.println(eventID);
+
                         r.setFill(Color.GRAY); // can immediately draw the pivot cell as a different color
-//                        System.out.println("Made gray!");
 
                         int shipLength = GUIGame.allowedShipLengths[confirmCount[0]]; // length of the ship being placed
 
@@ -216,14 +220,10 @@ class ShipPlacerStage extends Stage{
 
                         System.out.println(shipLength);
                         char pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size()); // convert rotate click counts to pivot direction char
-//                        pivotDir = 'S';
-                        System.out.println("rotateClickCount: " + rotateClickCount[0]);
-                        System.out.println("" + pivotDir);
-                        System.out.println("dirMap size: " + dirMap.size());
+
                         int[] pivotCoord = new int[]{data.getRow(), data.getCol()};
                         potentialOccupancyCoords = shipBoard.convertFromPivotAndDirection(pivotCoord, pivotDir, shipLength);
 
-                        System.out.println(Arrays.deepToString(potentialOccupancyCoords));
 
                         // if it's a valid placement, draw the ship position on the board
                         if(shipBoard.isInBounds(potentialOccupancyCoords) && shipBoard.areCoordsUnoccupied(potentialOccupancyCoords)){
@@ -240,7 +240,7 @@ class ShipPlacerStage extends Stage{
 
                 gp.add(r, i, j, 1, 1);
                 gpArray[i][j] = r;
-//                System.out.println(Arrays.deepToString(gpArray));
+
                 Button b = new Button("", r);
 //                b.setAlignment(Pos.CENTER);
                 gp.add(b, i, j, 1, 1);
@@ -413,7 +413,6 @@ class GameLoopStage extends Stage {
                     public void handle(MouseEvent e) {
 
                         String eventID = e.getPickResult().getIntersectedNode().getId(); // this trick from: https://stackoverflow.com/a/42430200
-                        System.out.println(eventID);
 
                         b.setDisable(true); // because has already been guessed
 
@@ -537,7 +536,6 @@ class postGameStage extends Stage{
 
         postGameCellWidthHeight = 30.0f;
 
-        System.out.println("Display both boards in this stage.");
         Label title = new Label("Post-Game Review");
         title.setFont(new Font("Arial", 30));
 
