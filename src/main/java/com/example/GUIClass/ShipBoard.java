@@ -1,6 +1,8 @@
+package com.example.GUIClass;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ShipBoard stores the locations of ships on the board in an array of integers/hashes <b>and</b> as an arraylist of ships;
@@ -10,7 +12,7 @@ public class ShipBoard extends Board {
     private ArrayList<Ship> shipList; // could infer these from a <set> of hashes in array and match those to each ship
     protected int[][] hashArray; // used to store hashes of ships in a grid pattern; cells accessed by (row, column)
 
-    private static final int emptyHash = 17; // should be prime.  Hash of an empty cell
+    public static final int emptyHash = 17; // should be prime.  Hash of an empty cell
 
     /**
      * ShipBoard constructor
@@ -196,6 +198,18 @@ public class ShipBoard extends Board {
             healthSum += ship.getHealth();
         }
         return healthSum;
+    }
+
+    /**
+     * this is useful for GUI rendering and god-mode (to peer inside opponent's ship placements)
+     * @return
+     */
+    public ArrayList<Ship> getShipList(){
+        return this.shipList;
+    }
+
+    public int[][] getHashArray(){
+        return this.hashArray;
     }
 
 

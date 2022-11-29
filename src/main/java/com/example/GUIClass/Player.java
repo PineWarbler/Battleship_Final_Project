@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+package com.example.GUIClass;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,7 +11,7 @@ public class Player {
     protected LowerBoard lowerBoard;
     protected HitOrMissHistoryBoard upperBoard;
 
-    protected ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
+    private ArrayList<int[]> alreadyGuessed; // stores already guessed coordinates
 
 
     /**
@@ -57,7 +58,7 @@ public class Player {
      */
     public cellStatus processRequestFromOtherPlayer(int[] coord){
         return this.lowerBoard.processIncomingGuess(coord);
-    } //sout here maybe?
+    }
 
     /**
      * checks to see if this player has already guessed a coordinate
