@@ -70,14 +70,14 @@ class SettingsStage extends Stage {
             // this is for the startGame button
             @Override
             public void handle(ActionEvent actionEvent) {
-                String mode = "";
+                Difficulty mode = Difficulty.NONE;
                 if (stoopitRadio.isSelected()) {
-                    mode = "stoopit";
+                    mode = Difficulty.EASY;
                     System.out.println("Stoopit was selected.");
                 } else if (smartRadio.isSelected()) {
-                    mode = "smart";
+                    mode = Difficulty.MEDIUM;
                 } else if (godRadio.isSelected()) {
-                    mode = "god";
+                    mode = Difficulty.HARD;
                 }
                 Stage s = (Stage) godRadio.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
                 s.close();
@@ -130,7 +130,11 @@ class ShipPlacerStage extends Stage{
         }
     }
 
-    ShipPlacerStage(String mode){
+    /**
+     *
+     * @param mode does nothing in this method; merely included so that I can pass its value on to the next stage of the GUI
+     */
+    ShipPlacerStage(Difficulty mode){
         hb.getChildren().addAll(rotate, confirmShipLocation, shipPrompt); // these all go on same row
         vb.getChildren().add(hb);
         vb.getChildren().add(gp);
@@ -373,13 +377,13 @@ class GameLoopStage extends Stage {
      * @param mode can be `stoopit`, `smart`, or `god-mode`
      * @param shipBoard the assembled shipBoard as arranged by the user in {@link SettingsStage}
      */
-    GameLoopStage(String mode, ShipBoard shipBoard){
+    GameLoopStage(Difficulty mode, ShipBoard shipBoard){
 //        if(mode.equals("god")){
 //            // play omnisciently
 //        }
         // make two player instances
         human = new Player("player", edgeSize);
-        //armada = new Computer(edgeSize); needs a difficulty now
+//        armada = new Computer(edgeSize); needs a difficulty now
 
         // fill player instances with lowerboards and upper boards
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), shipBoard);
