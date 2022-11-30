@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -102,7 +103,7 @@ class ShipPlacerStage extends Stage{
     GridPane gp = new GridPane(); // used to store array of rectangles and buttons to represent the board
     Rectangle[][] gpArray = new Rectangle[edgeSize][edgeSize]; // used to easily change other cell properties
 
-    Button done = new Button("Done");
+    Button done =  new Button("Start Game");
 
     ShipBoard shipBoard = new ShipBoard(edgeSize);
     Ship potentialShip;
@@ -147,6 +148,7 @@ class ShipPlacerStage extends Stage{
         shipPrompt.setFont(new Font("Arial", 20));
 
         // make these buttons disabled by default until ships are placed
+        done.setFont(new Font(40));
         done.setDisable(true);
         confirmShipLocation.setDisable(true);
 
@@ -481,10 +483,18 @@ class GameLoopStage extends Stage {
                 gpLowerBoard.add(b, i, j, 1, 1); // still render buttons to preserve same spacing as upper board
             }
         }
+//
+//        Label sunkLabel = new Label("Ship Sunk!");
+//        sunkLabel.setFont(new Font(25));
+//        vb.getChildren().add(4,sunkLabel);
 
-
+        Label upper = new Label("Upper Board");
+        vb.getChildren().add(upper);
         vb.getChildren().add(gpUpperBoard);
         vb.getChildren().add(new Label("")); // blank line is to delineate between boards
+//        vb.getChildren().add(new Label("")); // blank line is to delineate between boards
+        Label lower = new Label("Lower Board");
+        vb.getChildren().add(lower);
         vb.getChildren().add(gpLowerBoard);
 
         // set all to center alignment
