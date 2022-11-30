@@ -89,10 +89,10 @@ public class HitOrMissHistoryBoard extends Board {
 
 
                     if(this.cellStatuses[i-1][j-1] == cellStatus.HIT){
-                        sb.append("\u001B[97m"+"\u001B[1m" + "O"+ "\033[0m");
+                        sb.append("\u001B[31m"+"\u001B[1m" + "O"+ "\033[0m");
                     }
                     else if(this.cellStatuses[i-1][j-1] == cellStatus.MISS){
-                        sb.append("\u001B[31m"+"\u001B[1m" + "X" + "\033[0m");
+                        sb.append("\u001B[97m"+"\u001B[1m" + "X" + "\033[0m");
                     }
                     else{
                         sb.append(" ");

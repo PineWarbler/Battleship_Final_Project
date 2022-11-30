@@ -123,7 +123,7 @@ public class LowerBoard {
                     cellStatus cs = this.histBoard.cellStatuses[i-1][j-1];
                     //⧆□▣⧇⬜⬛
                     if((cs == cellStatus.HIT) && isShipInCell){
-                        sb.append("\u001B[97m"+"\u001B[1m" + "▣"+ "\033[0m");
+                        sb.append("\u001B[31m"+"\u001B[1m" + "▣"+ "\033[0m");
 
                     }
                     // why would there be a hit on a cell without a ship? I don't think we need the else if below...
@@ -135,7 +135,7 @@ public class LowerBoard {
                     }
 
                     else if(cs == cellStatus.MISS){
-                        sb.append("\u001B[31m" + "X" + "\033[0m");
+                        sb.append("\u001B[97m" + "X" + "\033[0m");
                     }
 
                     else{

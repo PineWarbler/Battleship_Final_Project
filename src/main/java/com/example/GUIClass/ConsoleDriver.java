@@ -248,7 +248,7 @@ public class ConsoleDriver {
         p1 = setUp(p1, allowedShipLengths);
         p1.getLowerBoard().printBoard();
 
-        p2.getLowerBoard().printBoard();
+        //p2.getLowerBoard().printBoard();
 
         Player askingPlayer = p1; // or can choose randomly who goes first
         Player respondingPlayer = p2;
