@@ -5,27 +5,24 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.example.GUIClass.GUIGame.allowedShipLengths;
 import static com.example.GUIClass.GUIGame.edgeSize;
@@ -45,6 +42,7 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
+//        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
          new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
@@ -285,7 +283,9 @@ class GameLoopStage extends Stage {
     Player human;
     Computer armada;
 
-    Label x;
+    Label upperMessage;
+    Label lowerMessage; // used for blank line between boards or for printing `ship sunk` messages
+
     VBox vb = new VBox();
     GridPane gpLowerBoard = new GridPane(); // used to store array of rectangles to represent the lower board
     GridPane gpUpperBoard = new GridPane(); // used to store array of rectangles and buttons to represent the upper board
@@ -342,6 +342,20 @@ class GameLoopStage extends Stage {
         }
     }
 
+    /**
+     * this task erases the `ship sunk` message.  Initialized each time a ship is sunk
+     * @param delayMs the delay time in milliseconds
+     */
+    // modified from https://stackoverflow.com/a/45131202
+    public void eraseMessage(long delayMs){
+        Thread t = new Thread(() ->{
+            try { Thread.sleep(delayMs); }catch(InterruptedException ignored){}
+            Platform.runLater(() -> lowerMessage.setText(""));
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
     public void masterHandler(String buttonGuessID) {
         // parse the buttonID for its coordinates
         ElementIDParser idParser = new ElementIDParser();
@@ -349,8 +363,18 @@ class GameLoopStage extends Stage {
 
         // human guesses a coordinate...handle this guess
         int[] playerGuessCoord = new int[]{data.getRow(), data.getCol()};
-        cellStatus response = armada.processRequestFromOtherPlayer(playerGuessCoord).getCellStatus();
+        ResponsePacket rp = armada.processRequestFromOtherPlayer(playerGuessCoord);
+        cellStatus response = rp.getCellStatus();
         human.processResponseFromOtherPlayer(playerGuessCoord, response);
+
+        // display `ship sunk` message if applicable
+        try{
+            int sunkShipLength = rp.getSunkShipLength();
+            lowerMessage.setText("Sunk ship of length " + sunkShipLength + "!");
+            eraseMessage(2500L);
+        } catch (IllegalArgumentException ignored){
+            // if failed, that's because no ship was sunk.  See documentation for ResponsePacket.getSunkShipLength()
+        }
 
         // computer guesses a coordinate...handle this guess
         int[] computerGuessCoord = armada.generateGuess();
@@ -367,11 +391,11 @@ class GameLoopStage extends Stage {
             gpLowerBoard.setDisable(true);
 
             // announce the winner with big words
-            x.setFont(new Font("Arial", 30));
+            upperMessage.setFont(new Font("Arial", 30));
             if(human.hasLost()) {
-                x.setText("The computer has won!");
+                upperMessage.setText("The computer has won!");
             } else{
-                x.setText("Congratulations! You've won!");
+                upperMessage.setText("Congratulations! You've won!");
             }
 
             // make more button actions available
@@ -414,8 +438,8 @@ class GameLoopStage extends Stage {
 //        armada.setLowerBoard(lb2); //dont need this I think
 
 
-        x = new Label("You've chosen to play a game in " + mode + " difficulty.");
-        vb.getChildren().add(x);
+        upperMessage = new Label("Difficulty: " + mode);
+        vb.getChildren().add(upperMessage);
 
         // make an upper board. this needs to be clickable
         for(int i = 0; i< edgeSize; i++){
@@ -484,15 +508,23 @@ class GameLoopStage extends Stage {
             }
         }
 //
+        // what if we only display "Ship sunk" for n seconds after the sunk?
 //        Label sunkLabel = new Label("Ship Sunk!");
 //        sunkLabel.setFont(new Font(25));
 //        vb.getChildren().add(4,sunkLabel);
 
         Label upper = new Label("Upper Board");
         vb.getChildren().add(upper);
+
         vb.getChildren().add(gpUpperBoard);
-        vb.getChildren().add(new Label("")); // blank line is to delineate between boards
-//        vb.getChildren().add(new Label("")); // blank line is to delineate between boards
+
+        // add ship sunk label or placeholding empty line
+        lowerMessage = new Label(""); // initialize to empty line at first
+        lowerMessage.setTextFill(Color.RED);
+        Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 16); // the string argument doesn't do anything for some reason
+        lowerMessage.setFont(font);
+        vb.getChildren().add(lowerMessage); // blank line is to delineate between boards. Will be used later to show `sunk ship` message
+
         Label lower = new Label("Lower Board");
         vb.getChildren().add(lower);
         vb.getChildren().add(gpLowerBoard);
