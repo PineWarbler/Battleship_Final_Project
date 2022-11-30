@@ -237,7 +237,7 @@ class ShipPlacerStage extends Stage{
                         ElementIDParser ip = new ElementIDParser();
                         ElementData data = ip.parseID(r.getId());
 
-                        System.out.println(shipLength);
+                        //System.out.println(shipLength);
                         pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size()); // convert rotate click counts to pivot direction char
 
                         pivotCoord = new int[]{data.getRow(), data.getCol()};

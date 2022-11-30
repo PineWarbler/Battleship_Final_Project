@@ -44,10 +44,15 @@ public class ShipBoard extends Board {
      */
     public boolean areCoordsUnoccupied(int[][] coords){
         for(int[] coord : coords){
+            //System.out.println(Arrays.toString(coord));
             int coordRow = coord[0];
             int coordCol = coord[1];
-            if(this.hashArray[coordRow][coordCol] != emptyHash){ // a ship has a non-empty hash
-                return false; // because coordinate is already occupied
+            try{ //Catches if coordinate is not on hashArray and returns false.
+                if (this.hashArray[coordRow][coordCol] != emptyHash) { // a ship has a non-empty hash
+                    return false; // because coordinate is already occupied
+                }
+            }catch(Exception ignored){
+                return false;
             }
         }
         return true; // because the method hasn't returned false yet
