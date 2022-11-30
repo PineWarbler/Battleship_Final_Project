@@ -90,6 +90,9 @@ class SettingsStage extends Stage {
 
 class ShipPlacerStage extends Stage{
 
+    int shipLength;
+    char pivotDir;
+    int[] pivotCoord;
     HBox hb = new HBox();
     Button rotate = new Button("Rotate");
     Button confirmShipLocation = new Button("Confirm Ship Location");
@@ -147,6 +150,10 @@ class ShipPlacerStage extends Stage{
         done.setDisable(true);
         confirmShipLocation.setDisable(true);
 
+        shipLength=0;
+        pivotDir = 'N';
+        pivotCoord = new int[]{0,0};
+
 
         // for mapping rotate button clicks to directions
         final int[] rotateClickCount = {0};
@@ -159,6 +166,18 @@ class ShipPlacerStage extends Stage{
             @Override
             public void handle(ActionEvent actionEvent) {
                 rotateClickCount[0]++; // just increment number of clicks
+                drawShipBoard();
+                try{
+                    pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size());
+                    potentialOccupancyCoords = shipBoard.convertFromPivotAndDirection(pivotCoord, pivotDir, shipLength);
+                    if(shipBoard.isInBounds(potentialOccupancyCoords) && shipBoard.areCoordsUnoccupied(potentialOccupancyCoords)){
+                        confirmShipLocation.setDisable(false); // because position is valid and can be confirmed
+                        drawPotentialShip();
+                    } else{
+                        gpArray[pivotCoord[1]][pivotCoord[0]].setFill(Color.GRAY);
+                        confirmShipLocation.setDisable(true);
+                    }
+                }catch(Exception ignored){}
             }
         });
 
@@ -213,15 +232,15 @@ class ShipPlacerStage extends Stage{
 
                         r.setFill(Color.GRAY); // can immediately draw the pivot cell as a different color
 
-                        int shipLength = GUIGame.allowedShipLengths[confirmCount[0]]; // length of the ship being placed
+                        shipLength = GUIGame.allowedShipLengths[confirmCount[0]]; // length of the ship being placed
 
                         ElementIDParser ip = new ElementIDParser();
                         ElementData data = ip.parseID(r.getId());
 
                         System.out.println(shipLength);
-                        char pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size()); // convert rotate click counts to pivot direction char
+                        pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size()); // convert rotate click counts to pivot direction char
 
-                        int[] pivotCoord = new int[]{data.getRow(), data.getCol()};
+                        pivotCoord = new int[]{data.getRow(), data.getCol()};
                         potentialOccupancyCoords = shipBoard.convertFromPivotAndDirection(pivotCoord, pivotDir, shipLength);
 
 
