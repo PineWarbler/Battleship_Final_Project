@@ -51,9 +51,9 @@ public class GUIGame extends Application {
 class SettingsStage extends Stage {
     VBox vb = new VBox();
     Label difficultyLabel = new Label("Computer difficulty:");
-    RadioButton stoopitRadio = new RadioButton("stoopit");
-    RadioButton smartRadio = new RadioButton("smart");
-    RadioButton godRadio = new RadioButton("god-mode");
+    RadioButton stoopitRadio = new RadioButton("EASY");
+    RadioButton smartRadio = new RadioButton("MEDIUM");
+    RadioButton godRadio = new RadioButton("HARD");
     Button startGame = new Button("Start Game");
     ToggleGroup tg = new ToggleGroup();
 
@@ -523,7 +523,6 @@ class postGameStage extends Stage{
     }
 
     postGameStage(LowerBoard humanLowerBoard, LowerBoard computerLowerBoard){
-
         vb = new VBox();
 
         humanGP = new GridPane();
