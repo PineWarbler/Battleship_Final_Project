@@ -393,7 +393,7 @@ class GameLoopStage extends Stage {
 //        armada.setLowerBoard(lb2); //dont need this I think
 
 
-        x = new Label("You've chosen to play a game in " + mode + " mode.");
+        x = new Label("You've chosen to play a game in " + mode + " difficulty.");
         vb.getChildren().add(x);
 
         // make an upper board. this needs to be clickable
