@@ -58,7 +58,7 @@ public class ConsoleDriver {
                 int pivCol = 100;
                 while (!finished) {
                     try {
-                        pivCol = sc.nextInt();
+                        pivCol = Integer.parseInt(sc.next());
                     } catch (Exception ignored) {
                     }
                     if (pivCol >= 1 && pivCol <= 10) {
