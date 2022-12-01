@@ -421,6 +421,8 @@ class GameLoopStage extends Stage {
             int sunkShipLength = rp.getSunkShipLength();
             lowerMessage.setText("Sunk ship of length " + sunkShipLength + "!");
             eraseMessage(2500L);
+//            Ship sunkShip = armada.lowerBoard.getShipBoard().identifyShip(playerGuessCoord);
+//            System.out.println("Received sunk ship packet: " + sunkShip.getHashID() + "; length: " + rp.getSunkShipLength() + "; status" + rp.getCellStatus());
         } catch (IllegalArgumentException ignored){
             // if failed, that's because no ship was sunk.  See documentation for ResponsePacket.getSunkShipLength()
         }
@@ -643,7 +645,7 @@ class GameLoopStage extends Stage {
         leftBox.setAlignment(Pos.TOP_RIGHT);
         //VBox.setMargin(leftBox, new Insets(400,0,400,0));
         leftBox.setPadding(new Insets(200,-400,0,400));
-        leftBox.getChildren().addAll(infoBoxLab,roundLab,diff,playerHealth,compHealth);
+//        leftBox.getChildren().addAll(infoBoxLab,roundLab,diff,playerHealth,compHealth);
         bp.setLeft(leftBox);
 
 
