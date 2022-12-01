@@ -5,18 +5,18 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -42,14 +42,14 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
-//        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
-         new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
+        //new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
+        new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
 
 class SettingsStage extends Stage {
     VBox vb = new VBox();
-    Label difficultyLabel = new Label("Computer difficulty:");
+    Label difficultyLabel = new Label("Opponent Difficulty:");
     RadioButton stoopitRadio = new RadioButton("EASY");
     RadioButton smartRadio = new RadioButton("MEDIUM");
     RadioButton godRadio = new RadioButton("HARD");
@@ -62,8 +62,29 @@ class SettingsStage extends Stage {
         stoopitRadio.setToggleGroup(tg);
         smartRadio.setToggleGroup(tg);
         godRadio.setToggleGroup(tg);
+        vb.setAlignment(Pos.TOP_CENTER);
+        difficultyLabel.setAlignment(Pos.CENTER_LEFT);
+        difficultyLabel.setFont(Font.font("",30));
+        difficultyLabel.setPadding(new Insets(0,0,10,0));
+        this.centerOnScreen();
 
-        vb.getChildren().addAll(difficultyLabel, stoopitRadio, smartRadio, godRadio, startGame);
+
+        VBox radioBox = new VBox();
+        radioBox.getChildren().addAll(stoopitRadio,smartRadio,godRadio);
+        radioBox.setAlignment(Pos.CENTER_LEFT);
+        VBox.setMargin(radioBox, new Insets(0,0,20,160));
+        //ap.getChildren().add(radioBox);
+        stoopitRadio.setFont(Font.font(20));
+        stoopitRadio.setAlignment(Pos.CENTER_LEFT);
+        smartRadio.setFont(Font.font(20));
+        godRadio.setFont(Font.font(20));
+        startGame.setFont(Font.font(30));
+
+
+        Label titleSettingsStage = new Label("Welcome to Battleship!");
+        titleSettingsStage.setPadding(new Insets(0,0,0,0));
+        titleSettingsStage.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,40));
+        vb.getChildren().addAll(titleSettingsStage,difficultyLabel, radioBox, startGame);
 
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             // this is for the startGame button
@@ -82,7 +103,9 @@ class SettingsStage extends Stage {
                 new ShipPlacerStage(mode);
             }
         });
-        this.setScene(new Scene(vb, 300, 300));
+        AnchorPane outerAP = new AnchorPane(vb);
+        vb.setPadding(new Insets(20,30,30,40));
+        this.setScene(new Scene(outerAP));
         this.show();
     }
 }
@@ -96,6 +119,7 @@ class ShipPlacerStage extends Stage{
     Button rotate = new Button("Rotate");
     Button confirmShipLocation = new Button("Confirm Ship Location");
     Label shipPrompt = new Label(""); // TODO: update this to prompt user to place ship of length n
+    Label rotatePrompt = new Label("");
 
     VBox vb = new VBox();
     GridPane gp = new GridPane(); // used to store array of rectangles and buttons to represent the board
@@ -136,23 +160,38 @@ class ShipPlacerStage extends Stage{
      * @param mode does nothing in this method; merely included so that I can pass its value on to the next stage of the GUI
      */
     ShipPlacerStage(Difficulty mode){
-        hb.getChildren().addAll(rotate, confirmShipLocation, shipPrompt); // these all go on same row
+        rotate.setFont(Font.font(20));
+        confirmShipLocation.setFont(Font.font(20));
+        Label titleShipPlacerStage = new Label("Place your ships!");
+        titleShipPlacerStage.setPadding(new Insets(0,0,10,0));
+        titleShipPlacerStage.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,40));
+        hb.getChildren().addAll(rotate, confirmShipLocation, shipPrompt,rotatePrompt); // these all go on same row
+        vb.getChildren().add(titleShipPlacerStage);
+
+        gp.setPadding(new Insets(10,0,15,0));
         vb.getChildren().add(hb);
         vb.getChildren().add(gp);
         vb.getChildren().add(done);
 
-        shipPrompt.setText("\tNow placing ship of length " + allowedShipLengths[0]); // prompt user to insert ship
-        shipPrompt.setAlignment(Pos.CENTER_LEFT);
-        shipPrompt.setFont(new Font("Arial", 20));
-
-        // make these buttons disabled by default until ships are placed
-        done.setFont(new Font(40));
-        done.setDisable(true);
-        confirmShipLocation.setDisable(true);
-
         shipLength=0;
         pivotDir = 'N';
         pivotCoord = new int[]{0,0};
+
+        shipPrompt.setText("\tShip Length: " + allowedShipLengths[0]); // prompt user to insert ship
+        shipPrompt.setAlignment(Pos.CENTER_LEFT);
+        shipPrompt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,20));
+
+        rotatePrompt.setText("\tDirection: " + pivotDir); // prompt user to insert ship
+        rotatePrompt.setAlignment(Pos.CENTER_LEFT);
+        rotatePrompt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,20));
+
+
+        // make these buttons disabled by default until ships are placed
+        done.setFont(new Font(30));
+        done.setDisable(true);
+        confirmShipLocation.setDisable(true);
+
+
 
 
         // for mapping rotate button clicks to directions
@@ -169,6 +208,7 @@ class ShipPlacerStage extends Stage{
                 drawShipBoard();
                 try{
                     pivotDir = dirMap.get(rotateClickCount[0] % dirMap.size());
+                    rotatePrompt.setText("\tDirection: " + pivotDir);
                     potentialOccupancyCoords = shipBoard.convertFromPivotAndDirection(pivotCoord, pivotDir, shipLength);
                     if(shipBoard.isInBounds(potentialOccupancyCoords) && shipBoard.areCoordsUnoccupied(potentialOccupancyCoords)){
                         confirmShipLocation.setDisable(false); // because position is valid and can be confirmed
@@ -191,7 +231,7 @@ class ShipPlacerStage extends Stage{
                 confirmShipLocation.setDisable(true);
                 drawShipBoard(); // with newly added ship
                 if(confirmCount[0] < allowedShipLengths.length){
-                    shipPrompt.setText("\tNow placing ship of length " + allowedShipLengths[confirmCount[0]]); // update prompt to place next ship
+                    shipPrompt.setText("\tShip Length: " + allowedShipLengths[confirmCount[0]]); // update prompt to place next ship
                 }
 
                 if(confirmCount[0] == allowedShipLengths.length){
@@ -199,6 +239,7 @@ class ShipPlacerStage extends Stage{
                     rotate.setDisable(true);
                     done.setDisable(false);
                     shipPrompt.setText(""); // no more prompts
+                    rotatePrompt.setText("");
                 }
             }
         });
@@ -279,12 +320,20 @@ class ShipPlacerStage extends Stage{
 
 class GameLoopStage extends Stage {
 
-    int gameCellWidthHeight = 20; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
+    int round = 0;
+    int gameCellWidthHeight = 25; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
     Player human;
     Computer armada;
 
     Label upperMessage;
     Label lowerMessage; // used for blank line between boards or for printing `ship sunk` messages
+
+    Label infoBoxLab = new Label("Game Info");
+    Label playerHealth = new Label("Your health: ");
+    Label compHealth = new Label("Opponent health: ");
+    Label roundLab = new Label("Turns: " + round);
+
+    Popup newPop = new Popup();
 
     VBox vb = new VBox();
     GridPane gpLowerBoard = new GridPane(); // used to store array of rectangles to represent the lower board
@@ -381,6 +430,14 @@ class GameLoopStage extends Stage {
         response = human.processRequestFromOtherPlayer(computerGuessCoord).getCellStatus();
         armada.processResponseFromOtherPlayer(computerGuessCoord, response);
 
+        round++;//increase round and update text;
+        roundLab.setText("Turns: " + round);
+
+        compHealth.setText("Opponent health: " + armada.getHealth()); //Update health labels after each "round"
+        playerHealth.setText("Your health: " + human.getHealth());
+
+
+
         // draw the updated boards on the screen
         drawUpperBoard();
         drawLowerBoard();
@@ -398,21 +455,51 @@ class GameLoopStage extends Stage {
                 upperMessage.setText("Congratulations! You've won!");
             }
 
+
             // make more button actions available
             Button viewOther = new Button("View Opponent's Board");
+            viewOther.setFont(Font.font(20));
             viewOther.setOnAction(actionEvent -> {
+                newPop.hide();
                 new postGameStage(human.lowerBoard, armada.lowerBoard); // let user see both/opposing side's ship positions
             });
 
             Button quit = new Button("Quit");
+            quit.setFont(Font.font(20));
             quit.setOnAction(actionEvent -> {
+                newPop.hide();
                 Stage s = (Stage) gpUpperBoard.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
                 s.close();
             });
+
             HBox hb2 = new HBox();
             hb2.setAlignment(Pos.CENTER);
             hb2.getChildren().addAll(quit, viewOther);
-            vb.getChildren().add(hb2);
+            hb2.setSpacing(10);
+
+
+
+            VBox popUpVB = new VBox();
+            popUpVB.getChildren().addAll(upperMessage,hb2);
+            popUpVB.setSpacing(10);
+            upperMessage.setFont(Font.font("",FontWeight.EXTRA_BOLD,50));
+
+            StackPane popStack = new StackPane(popUpVB);
+            //StackPane.setMargin(popStack,new Insets(20,20,20,20));
+
+            popStack.setPadding(new Insets(20,20,20,20));
+            popStack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            popStack.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM)));
+
+            newPop.getContent().addAll(popStack);
+
+            newPop.setAnchorX(530);
+            newPop.setAnchorY(300);
+
+            newPop.show(this);
+            //vb.getChildren().add(hb2);
+
+
 
         }
     }
@@ -438,7 +525,8 @@ class GameLoopStage extends Stage {
 //        armada.setLowerBoard(lb2); //dont need this I think
 
 
-        upperMessage = new Label("Difficulty: " + mode);
+        //upperMessage = new Label("Difficulty: " + mode);
+        upperMessage = new Label("");
         vb.getChildren().add(upperMessage);
 
         // make an upper board. this needs to be clickable
@@ -513,7 +601,9 @@ class GameLoopStage extends Stage {
 //        sunkLabel.setFont(new Font(25));
 //        vb.getChildren().add(4,sunkLabel);
 
+        Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 20); // the string argument doesn't do anything for some reason
         Label upper = new Label("Upper Board");
+        upper.setFont(font);
         vb.getChildren().add(upper);
 
         vb.getChildren().add(gpUpperBoard);
@@ -521,11 +611,11 @@ class GameLoopStage extends Stage {
         // add ship sunk label or placeholding empty line
         lowerMessage = new Label(""); // initialize to empty line at first
         lowerMessage.setTextFill(Color.RED);
-        Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 16); // the string argument doesn't do anything for some reason
         lowerMessage.setFont(font);
         vb.getChildren().add(lowerMessage); // blank line is to delineate between boards. Will be used later to show `sunk ship` message
 
         Label lower = new Label("Lower Board");
+        lower.setFont(font);
         vb.getChildren().add(lower);
         vb.getChildren().add(gpLowerBoard);
 
@@ -536,7 +626,29 @@ class GameLoopStage extends Stage {
 
         // on first load, render lowerBoard
         drawLowerBoard();
-        this.setScene(new Scene(vb));
+
+        BorderPane bp = new BorderPane(vb);
+        infoBoxLab.setFont(Font.font("",FontWeight.EXTRA_BOLD, 20));
+
+        Label diff = new Label("Opponent difficulty: " + mode);
+        diff.setFont(new Font(15));
+        playerHealth.setText("Your health: " + human.getHealth());
+        playerHealth.setFont(new Font(15));
+        compHealth.setText("Opponent health: " + armada.getHealth());
+        compHealth.setFont(new Font(15));
+        roundLab.setFont(new Font(15));
+
+
+        VBox leftBox = new VBox();
+        leftBox.setAlignment(Pos.TOP_RIGHT);
+        //VBox.setMargin(leftBox, new Insets(400,0,400,0));
+        leftBox.setPadding(new Insets(200,-400,0,400));
+        leftBox.getChildren().addAll(infoBoxLab,roundLab,diff,playerHealth,compHealth);
+        bp.setLeft(leftBox);
+
+
+
+        this.setScene(new Scene(bp));
         this.setMaximized(true);
         this.show();
 
@@ -595,7 +707,8 @@ class postGameStage extends Stage{
         postGameCellWidthHeight = 30.0f;
 
         Label title = new Label("Post-Game Review");
-        title.setFont(new Font("Arial", 30));
+        title.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,30));
+
 
         Label humanBoardLabel = new Label("Your Lower Board:");
         humanBoardLabel.setFont(new Font("Arial", 20));
@@ -604,8 +717,10 @@ class postGameStage extends Stage{
         computerBoardLabel.setFont(new Font("Arial", 20));
 
         vb.setAlignment(Pos.CENTER);
+        vb.setSpacing(10);
 
         Button quit = new Button("Exit");
+        quit.setFont(Font.font(20));
         quit.setOnAction(actionEvent -> Platform.exit());
 
         // fill the gridpanes with ships and hits/misses
@@ -614,7 +729,11 @@ class postGameStage extends Stage{
 
         // put the board titles with their respective boards
         VBox computerVB = new VBox(computerBoardLabel, computerGP);
+        computerVB.setSpacing(10);
+        computerVB.setAlignment(Pos.CENTER);
         VBox humanVB = new VBox(humanBoardLabel, humanGP);
+        humanVB.setSpacing(10);
+        humanVB.setAlignment(Pos.CENTER);
 
         HBox boardsRow = new HBox(computerVB, new Label("\t\t"), humanVB); // the empty label is for blank space
         boardsRow.setAlignment(Pos.CENTER);
