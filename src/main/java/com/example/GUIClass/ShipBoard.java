@@ -69,16 +69,18 @@ public class ShipBoard extends Board {
         } else if(!isInBounds(occupancyCoords)) {
             throw new IllegalArgumentException("One or more of the requested occupancy coordinates is not within the bounds of the board");
         } else{
-            int hashID = ship.getHashID();
+
+            ship.setBowCoord(occupancyCoords[0]);
+            ship.setSternCoord(occupancyCoords[occupancyCoords.length-1]);
+            this.shipList.add(ship); // add the ship to the list
+
+            int hashID = ship.getHashID(); // call getHashID after setting the bow and stern coordinates to ensure a unique hash!
             for (int[] coord : occupancyCoords) {
                 int coordRow = coord[0];
                 int coordCol = coord[1];
                 this.hashArray[coordRow][coordCol] = hashID;
             }
-            // make sure to include bow and stern coords also!
-            ship.setBowCoord(occupancyCoords[0]);
-            ship.setSternCoord(occupancyCoords[occupancyCoords.length-1]);
-            this.shipList.add(ship); // add the ship to the list
+
         }
     }
 
