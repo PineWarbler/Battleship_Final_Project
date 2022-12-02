@@ -42,7 +42,7 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
-        //new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
+       // new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
         new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
@@ -106,6 +106,7 @@ class SettingsStage extends Stage {
         AnchorPane outerAP = new AnchorPane(vb);
         vb.setPadding(new Insets(20,30,30,40));
         this.setScene(new Scene(outerAP));
+        this.setResizable(false);
         this.show();
     }
 }
@@ -311,8 +312,11 @@ class ShipPlacerStage extends Stage{
         vb.setAlignment(Pos.CENTER);
         gp.setAlignment(Pos.CENTER);
         hb.setAlignment(Pos.CENTER);
+        vb.setPadding(new Insets(20,20,20,20));
         this.setScene(new Scene(vb));
         this.setMaximized(true);
+        this.setTitle("Battleship");
+        this.setResizable(false);
         this.show();
 //        openOther.setOnAction(t -> new GameLoopStage(mode));
     }
@@ -409,6 +413,7 @@ class GameLoopStage extends Stage {
         // parse the buttonID for its coordinates
         ElementIDParser idParser = new ElementIDParser();
         ElementData data = idParser.parseID(buttonGuessID);
+        lowerMessage.setText(""); //clear lowerMessage incase the user is playing fast
 
         // human guesses a coordinate...handle this guess
         int[] playerGuessCoord = new int[]{data.getRow(), data.getCol()};
@@ -487,7 +492,7 @@ class GameLoopStage extends Stage {
             upperMessage.setFont(Font.font("",FontWeight.EXTRA_BOLD,50));
 
             StackPane popStack = new StackPane(popUpVB);
-            //StackPane.setMargin(popStack,new Insets(20,20,20,20));
+            StackPane.setMargin(popStack,new Insets(20,20,20,20));
 
             popStack.setPadding(new Insets(20,20,20,20));
             popStack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -629,7 +634,9 @@ class GameLoopStage extends Stage {
         // on first load, render lowerBoard
         drawLowerBoard();
 
-        BorderPane bp = new BorderPane(vb);
+       // BorderPane bp = new BorderPane(vb);
+        HBox outerMostHBox = new HBox();
+
         infoBoxLab.setFont(Font.font("",FontWeight.EXTRA_BOLD, 20));
 
         Label diff = new Label("Opponent difficulty: " + mode);
@@ -642,16 +649,23 @@ class GameLoopStage extends Stage {
 
 
         VBox leftBox = new VBox();
-        leftBox.setAlignment(Pos.TOP_RIGHT);
-        //VBox.setMargin(leftBox, new Insets(400,0,400,0));
-        leftBox.setPadding(new Insets(200,-400,0,400));
-//        leftBox.getChildren().addAll(infoBoxLab,roundLab,diff,playerHealth,compHealth);
-        bp.setLeft(leftBox);
+        leftBox.setAlignment(Pos.CENTER_RIGHT);
+        //VBox.setMargin(leftBox, new Insets(0,20,0,20));
+        leftBox.setPadding(new Insets(0,50,0,0));
+        leftBox.getChildren().addAll(infoBoxLab,roundLab,diff,playerHealth,compHealth);
+
+        outerMostHBox.getChildren().addAll(leftBox,vb);
+        outerMostHBox.setAlignment(Pos.CENTER);
+        outerMostHBox.setPadding(new Insets(20,20,20,20));
+        //bp.setLeft(leftBox);
 
 
 
-        this.setScene(new Scene(bp));
+        //Scene tempScene = new Scene(outerMostHBox);
+        this.setScene(new Scene(outerMostHBox));
+        this.resizableProperty().set(false);
         this.setMaximized(true);
+        this.setTitle("Battleship");
         this.show();
 
     }
@@ -744,6 +758,7 @@ class postGameStage extends Stage{
 
         this.setScene(new Scene(vb));
         this.setMaximized(true);
+        this.setTitle("Battleship");
         this.show();
     }
 }
