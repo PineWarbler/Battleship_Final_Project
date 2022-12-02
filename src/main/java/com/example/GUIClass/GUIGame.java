@@ -18,11 +18,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.example.GUIClass.GUIGame.allowedShipLengths;
 import static com.example.GUIClass.GUIGame.edgeSize;
@@ -42,7 +40,7 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
-//        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
+        //new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
         new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
@@ -55,6 +53,10 @@ class SettingsStage extends Stage {
     RadioButton godRadio = new RadioButton("HARD");
     Button startGame = new Button("Start Game");
     ToggleGroup tg = new ToggleGroup();
+
+    Button questionButton = new Button("?");
+    Popup questionPop = new Popup();
+    Button closeB = new Button("Close");
 
     SettingsStage() {
         smartRadio.setSelected(true); // default mode is `smart`
@@ -80,11 +82,21 @@ class SettingsStage extends Stage {
         godRadio.setFont(Font.font(20));
         startGame.setFont(Font.font(30));
 
+        HBox questionDiffLine = new HBox();
+        questionDiffLine.setAlignment(Pos.TOP_CENTER);
+        questionDiffLine.getChildren().addAll(questionButton,difficultyLabel);
+
+        questionButton.setShape(new Circle(1));
+        questionButton.setAlignment(Pos.TOP_CENTER);
+        questionButton.setFont(Font.font("",FontWeight.BOLD,11));
+        questionButton.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
+
 
         Label titleSettingsStage = new Label("Welcome to Battleship!");
         titleSettingsStage.setPadding(new Insets(0,0,0,0));
         titleSettingsStage.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,40));
-        vb.getChildren().addAll(titleSettingsStage,difficultyLabel, radioBox, startGame);
+
+        vb.getChildren().addAll(titleSettingsStage,questionDiffLine, radioBox, startGame);
 
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             // this is for the startGame button
@@ -102,12 +114,67 @@ class SettingsStage extends Stage {
                 s.close();
                 new ShipPlacerStage(mode);
             }
+
+
         });
+
+        questionButton.setOnAction(new EventHandler<ActionEvent>() {
+            // this is for the startGame button
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                AnchorPane ap = new AnchorPane();
+                ap.setPrefSize(1,1);
+                Scene test = new Scene(ap);
+                Stage test1 = new Stage();
+                test1.setScene(test);
+                test1.show();
+                questionPop.show(test1);
+                closeB.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent1){
+
+
+                        test1.close();
+
+                    }
+
+
+                });
+            }
+        });
+
+
+        VBox qVB = new VBox();
+        Label line1 = new Label("Easy: Opponent guesses randomly");
+        Label line2 = new Label("Medium: Like easy, but opponent reacts when it gets a hit");
+        Label line3 = new Label("Hard: Like medium, but opponent makes initial guesses with strategy");
+
+        line1.setFont(new Font(20));
+        line2.setFont(new Font(20));
+        line3.setFont(new Font(20));
+        closeB.setFont(new Font(18));
+        qVB.getChildren().addAll(line1,line2,line3,closeB);
+        qVB.setSpacing(5);
+
+        StackPane popStack = new StackPane(qVB);
+        StackPane.setMargin(popStack,new Insets(20,20,20,20));
+
+        popStack.setPadding(new Insets(20,20,20,20));
+        popStack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        popStack.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM)));
+
+        questionPop.getContent().addAll(popStack);
+        questionPop.sizeToScene();
+
+
+
         AnchorPane outerAP = new AnchorPane(vb);
         vb.setPadding(new Insets(20,30,30,40));
         this.setScene(new Scene(outerAP));
         this.setResizable(false);
         this.show();
+        smartRadio.requestFocus();
     }
 }
 
@@ -121,8 +188,6 @@ class ShipPlacerStage extends Stage{
     Button confirmShipLocation = new Button("Confirm Ship Location");
     Label shipPrompt = new Label(""); // TODO: update this to prompt user to place ship of length n
     Label rotatePrompt = new Label("");
-
-    int shipPlacerCellWidthHeight = 40;
 
     VBox vb = new VBox();
     GridPane gp = new GridPane(); // used to store array of rectangles and buttons to represent the board
@@ -264,8 +329,8 @@ class ShipPlacerStage extends Stage{
         for(int i = 0; i< edgeSize; i++){
             for(int j = 0; j<edgeSize; j++){
                 Rectangle r = new Rectangle();
-                r.setWidth(shipPlacerCellWidthHeight);
-                r.setHeight(shipPlacerCellWidthHeight);
+                r.setWidth(50);
+                r.setHeight(50);
                 r.setId("Upper;" + j + ";" + i);
 
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -327,7 +392,7 @@ class ShipPlacerStage extends Stage{
 class GameLoopStage extends Stage {
 
     int round = 0;
-    int gameCellWidthHeight = 20; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
+    int gameCellWidthHeight = 25; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
     Player human;
     Computer armada;
 
