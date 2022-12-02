@@ -123,19 +123,16 @@ class SettingsStage extends Stage {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                AnchorPane ap = new AnchorPane();
-                ap.setPrefSize(1,1);
-                Scene test = new Scene(ap);
-                Stage test1 = new Stage();
-                test1.setScene(test);
-                test1.show();
-                questionPop.show(test1);
+
+                questionPop.show(vb.getScene().getWindow());
+
+
                 closeB.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent1){
 
 
-                        test1.close();
+                        questionPop.hide();
 
                     }
 
