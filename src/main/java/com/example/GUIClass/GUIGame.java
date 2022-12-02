@@ -42,8 +42,8 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
-       // new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
-        new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
+        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
+        //new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
 
@@ -457,7 +457,7 @@ class GameLoopStage extends Stage {
             // announce the winner with big words
             upperMessage.setFont(new Font("Arial", 30));
             if(human.hasLost()) {
-                upperMessage.setText("The computer has won!");
+                upperMessage.setText("Your opponent has won!");
             } else{
                 upperMessage.setText("Congratulations! You've won!");
             }
@@ -487,7 +487,11 @@ class GameLoopStage extends Stage {
 
 
             VBox popUpVB = new VBox();
-            popUpVB.getChildren().addAll(upperMessage,hb2);
+            popUpVB.getChildren().addAll(upperMessage,roundLab,hb2);
+            popUpVB.setAlignment(Pos.CENTER);
+
+            roundLab.setText("Game took " + round + " turns!");
+            roundLab.setFont(new Font(25));
             popUpVB.setSpacing(10);
             upperMessage.setFont(Font.font("",FontWeight.EXTRA_BOLD,50));
 
@@ -500,8 +504,9 @@ class GameLoopStage extends Stage {
 
             newPop.getContent().addAll(popStack);
 
-            newPop.setAnchorX(530);
-            newPop.setAnchorY(300);
+//            newPop.setAnchorX(530);
+//            newPop.setAnchorY(300);
+            newPop.sizeToScene();
 
             newPop.show(this);
             //vb.getChildren().add(hb2);
