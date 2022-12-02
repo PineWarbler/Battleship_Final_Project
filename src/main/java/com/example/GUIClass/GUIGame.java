@@ -42,8 +42,8 @@ public class GUIGame extends Application {
 //
 //        LowerBoard computerLB = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
 //        new postGameStage(humanLB, computerLB);
-        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
-        //new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
+//        new GameLoopStage(Difficulty.EASY, new ShipBoard(edgeSize));
+        new SettingsStage(); // this starts off the chain of windows: settings -> placeShips -> GameLoop -> post-Game
     }
 }
 
@@ -121,6 +121,8 @@ class ShipPlacerStage extends Stage{
     Button confirmShipLocation = new Button("Confirm Ship Location");
     Label shipPrompt = new Label(""); // TODO: update this to prompt user to place ship of length n
     Label rotatePrompt = new Label("");
+
+    int shipPlacerCellWidthHeight = 40;
 
     VBox vb = new VBox();
     GridPane gp = new GridPane(); // used to store array of rectangles and buttons to represent the board
@@ -262,8 +264,8 @@ class ShipPlacerStage extends Stage{
         for(int i = 0; i< edgeSize; i++){
             for(int j = 0; j<edgeSize; j++){
                 Rectangle r = new Rectangle();
-                r.setWidth(50);
-                r.setHeight(50);
+                r.setWidth(shipPlacerCellWidthHeight);
+                r.setHeight(shipPlacerCellWidthHeight);
                 r.setId("Upper;" + j + ";" + i);
 
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -325,7 +327,7 @@ class ShipPlacerStage extends Stage{
 class GameLoopStage extends Stage {
 
     int round = 0;
-    int gameCellWidthHeight = 25; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
+    int gameCellWidthHeight = 20; // note that this will likely be smaller than the cell dimensions for ShipPlacerStage because need to fit two boards on screen instead of one
     Player human;
     Computer armada;
 
