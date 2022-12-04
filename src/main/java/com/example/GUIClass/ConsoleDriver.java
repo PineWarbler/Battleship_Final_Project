@@ -7,11 +7,8 @@ import java.util.TreeMap;
 
 public class ConsoleDriver {
 
-
-
-
-
     static final int edgeSize = 10;
+
     /**
      * allows user to input ship locations via the console
      * @param p
@@ -21,8 +18,6 @@ public class ConsoleDriver {
     public static Player setUp(Player p, int[] allowedShipLengths) {
 
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), new ShipBoard(edgeSize));
-
-
 
 
         Scanner sc = new Scanner(System.in);

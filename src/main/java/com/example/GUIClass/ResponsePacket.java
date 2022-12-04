@@ -14,6 +14,10 @@ public class ResponsePacket {
         this.sunkShipLength = sunkShipLength;
     }
 
+    /**
+     * alternative constructor; used if no ship has been sunk by the guess
+     * @param cs
+     */
     public ResponsePacket(cellStatus cs){
         this.cs = cs;
         this.sunkShipLength = -1;

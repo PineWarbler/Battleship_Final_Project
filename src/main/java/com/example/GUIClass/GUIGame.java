@@ -190,7 +190,7 @@ class ShipPlacerStage extends Stage{
     HBox hb = new HBox();
     Button rotate = new Button("Rotate");
     Button confirmShipLocation = new Button("Confirm Ship Location");
-    Label shipPrompt = new Label(""); // TODO: update this to prompt user to place ship of length n
+    Label shipPrompt = new Label(""); // update this to prompt user to place ship of length n
     Label rotatePrompt = new Label("");
 
     VBox vb = new VBox();
@@ -439,7 +439,7 @@ class GameLoopStage extends Stage {
                     gpLowerBoard.add(c, i, j, 1, 1);
                     GridPane.setHalignment(c, HPos.CENTER);
 
-                    // TODO: remove this else-if block when done debugging
+                    // marking missed cells on player's own lowerboard is not a necessary requirement as defined in the official game rules
                 } else if(human.lowerBoard.getHistBoard().getCellStatus(new int[]{j, i}) == cellStatus.MISS){
                     Circle c = new Circle();
                     double radius = (gameCellWidthHeight / 2.0) * 0.666; // size is dependent on cell size

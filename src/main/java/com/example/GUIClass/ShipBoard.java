@@ -182,24 +182,15 @@ public class ShipBoard extends Board {
         throw new IllegalArgumentException("No matching ship is found.");
     }
 
-    public Ship identifyShip(int[] coord){
-
+    /**
+     * alternative method of identifying a ship: by coordinate; calls {@link #identifyShip(int)}
+     * @param coord
+     * @return
+     */
+    public Ship identifyShip(int[] coord) {
         int hashID = this.hashArray[coord[0]][coord[1]];
-
-        for (Ship i : shipList){
-            if(i.getHashID() == hashID){
-                return i;
-            }
-        }
-        return null;
+        return identifyShip(hashID);
     }
-
-
-
-
-
-
-
 
 
     /**

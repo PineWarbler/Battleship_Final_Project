@@ -71,7 +71,7 @@ public class Computer extends Player{
     }
 
     /**
-     * used if difficulty mode is "God-mode".  Lets the computer see the positions of the opponent's ships.  Makes a deep copy of the argument hashArray and stores in {@code searchMatrix}.
+     * used if difficulty mode is "God-mode".  Lets the computer see the positions of the opponent's ships.  Makes a deep copy of the argument {@param hashArray} and stores in {@code searchMatrix}.
      * @param hashArray a 2D array of hashes
      */
     public void setOtherPlayersHashArray(int[][] hashArray){
@@ -86,7 +86,11 @@ public class Computer extends Player{
 
     }
 
-
+    /**
+     * marks the upper board as hit
+     * @param coord
+     * @return
+     */
     public boolean wasHit(int[] coord){
 
         if(this.upperBoard.getCellStatus(coord) == cellStatus.HIT){
@@ -97,7 +101,12 @@ public class Computer extends Player{
         }
     }
 
-
+    /**
+     * consults the list of possible moves to see if a coordinate is contained therein
+     * @param coord the coordinate to be checked
+     * @param moves the list of possible moves
+     * @return boolean value depending on whether coordinate is a possible move
+     */
     public boolean isPossible(int[] coord, ArrayList<int[]> moves){
         for(int[] a : moves){
             if(Arrays.equals(coord, a)){
@@ -107,7 +116,11 @@ public class Computer extends Player{
         return false;
     }
 
-
+    /**
+     * removes coordinates from an arraylist of moves
+     * @param coords
+     * @param moves
+     */
     public void removeCoords(int[][] coords, ArrayList<int[]> moves){
         for(int i = 0; i<coords.length;i++){
             //System.out.println(Arrays.toString(coords[i]));
@@ -121,6 +134,11 @@ public class Computer extends Player{
         }
     }
 
+    /**
+     * similar to {@link #removeCoords} but only removes a single coordinate
+     * @param coord
+     * @param moves
+     */
     public void removeCoord(int[] coord, ArrayList<int[]> moves){
 
             //System.out.println(Arrays.toString(coords[i]));
@@ -237,7 +255,7 @@ public class Computer extends Player{
 
 
     /**
-     * Generates a guess based on logic
+     * Generates a guess based on logic according to the difficulty mode of {@code diff}
      * @return
      */
     public int[] generateGuess(){
@@ -437,11 +455,10 @@ public class Computer extends Player{
     }
 
 
-
-
-
+    /**
+     * fills computer's ship board with ships of random orientation and pivot coordinates
+     */
     public void generateShipBoard(){
-        // TODO: generate a starting board
 
         ArrayList<Integer> allowedShipLengths = new ArrayList<>(List.of(5,4,3,3,2));
 
@@ -474,14 +491,23 @@ public class Computer extends Player{
         }
     }
 
-@Override
+    /**
+     * removes the length of a placed ship from the {@code shipLengths}
+     * @param size
+     */
+    @Override
     public void updateShipList(int size){
 
         shipLengths.remove(((Integer) size));
         consecutiveHits=0;
     }
 
-@Override
+    /**
+     * records the HIT/MISS response from the opponent and stores guess coordinates for future guess decisions
+     * @param coord the coordinate of the guess
+     * @param responseStatus
+     */
+    @Override
 public void processResponseFromOtherPlayer(int[] coord, cellStatus responseStatus){
     if(responseStatus==cellStatus.HIT){
         this.upperBoard.markAsHit(coord);

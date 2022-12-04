@@ -14,7 +14,6 @@ public class LowerBoard {
      * @param shipBoard
      */
     public LowerBoard(HitOrMissHistoryBoard historyBoard, ShipBoard shipBoard){
-        // TODO: complete this constructor
         edgeSize = historyBoard.edgeSize;
 
         this.histBoard = historyBoard;
@@ -43,16 +42,6 @@ public class LowerBoard {
         return status;
     }
 
-    /**
-     * inserts ship into the ShipBoard
-     * @param coord coordinates of points which the ship should occupy
-     * @param ship the ship to be placed
-     */
-    public void placeShip(int[] coord, Ship ship){
-        //TODO: Sabella
-        // UMM...[REYNOLDS] I don't think we need this method as long as Player.lowerBoard is not private
-        // then we can call player1.lowerBoard.getShipBoard().processIncomingGuess();
-    }
 
     /**
      * Gets health of the ships

@@ -55,7 +55,6 @@ public class Ship {
      * @return
      */
     public int getHashID(){
-        // adding one to all multiplication elements so that no elements are zero.  Otherwise, if one element was zero, hashes of different ships would all return zero.
         // health should not be included in the hash because it changes during the game
         try {
             return 17 + (11 * (length + 1)) + (13*(bowCoord[1] + 1)) + (19*(bowCoord[0] + 1)) + (23*(sternCoord[1] + 1)) + (29*(sternCoord[0] + 1));
