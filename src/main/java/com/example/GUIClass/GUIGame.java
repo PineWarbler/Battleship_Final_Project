@@ -18,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.util.*;
 
@@ -48,9 +47,10 @@ public class GUIGame extends Application {
 class SettingsStage extends Stage {
     VBox vb = new VBox();
     Label difficultyLabel = new Label("Opponent Difficulty:");
-    RadioButton stoopitRadio = new RadioButton("EASY");
-    RadioButton smartRadio = new RadioButton("MEDIUM");
-    RadioButton godRadio = new RadioButton("HARD");
+    RadioButton easyRadio = new RadioButton("EASY");
+    RadioButton mediumRadio = new RadioButton("MEDIUM");
+    RadioButton hardRadio = new RadioButton("HARD");
+    RadioButton godModeRadio = new RadioButton("GOD-MODE");
     Button startGame = new Button("Start Game");
     ToggleGroup tg = new ToggleGroup();
 
@@ -59,11 +59,13 @@ class SettingsStage extends Stage {
     Button closeB = new Button("Close");
 
     SettingsStage() {
-        smartRadio.setSelected(true); // default mode is `smart`
+        mediumRadio.setSelected(true); // default mode is `smart`
         // adding the radio buttons to a toggle group makes only one button selectable at a time (what we want)
-        stoopitRadio.setToggleGroup(tg);
-        smartRadio.setToggleGroup(tg);
-        godRadio.setToggleGroup(tg);
+        easyRadio.setToggleGroup(tg);
+        mediumRadio.setToggleGroup(tg);
+        hardRadio.setToggleGroup(tg);
+        godModeRadio.setToggleGroup(tg);
+
         vb.setAlignment(Pos.TOP_CENTER);
         difficultyLabel.setAlignment(Pos.CENTER_LEFT);
         difficultyLabel.setFont(Font.font("",30));
@@ -72,14 +74,15 @@ class SettingsStage extends Stage {
 
 
         VBox radioBox = new VBox();
-        radioBox.getChildren().addAll(stoopitRadio,smartRadio,godRadio);
+        radioBox.getChildren().addAll(easyRadio, mediumRadio, hardRadio, godModeRadio);
         radioBox.setAlignment(Pos.CENTER_LEFT);
         VBox.setMargin(radioBox, new Insets(0,0,20,160));
         //ap.getChildren().add(radioBox);
-        stoopitRadio.setFont(Font.font(20));
-        stoopitRadio.setAlignment(Pos.CENTER_LEFT);
-        smartRadio.setFont(Font.font(20));
-        godRadio.setFont(Font.font(20));
+        easyRadio.setFont(Font.font(20));
+        easyRadio.setAlignment(Pos.CENTER_LEFT);
+        mediumRadio.setFont(Font.font(20));
+        hardRadio.setFont(Font.font(20));
+        godModeRadio.setFont(Font.font(20));
         startGame.setFont(Font.font(30));
 
         HBox questionDiffLine = new HBox();
@@ -103,14 +106,16 @@ class SettingsStage extends Stage {
             @Override
             public void handle(ActionEvent actionEvent) {
                 Difficulty mode = Difficulty.NONE;
-                if (stoopitRadio.isSelected()) {
+                if (easyRadio.isSelected()) {
                     mode = Difficulty.EASY;
-                } else if (smartRadio.isSelected()) {
+                } else if (mediumRadio.isSelected()) {
                     mode = Difficulty.MEDIUM;
-                } else if (godRadio.isSelected()) {
+                } else if (hardRadio.isSelected()) {
                     mode = Difficulty.HARD;
+                } else if (godModeRadio.isSelected()){
+                    mode = Difficulty.GOD_MODE;
                 }
-                Stage s = (Stage) godRadio.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
+                Stage s = (Stage) hardRadio.getScene().getWindow(); // this and below line trick from https://stackoverflow.com/a/13602324
                 s.close();
                 new ShipPlacerStage(mode);
             }
@@ -146,12 +151,14 @@ class SettingsStage extends Stage {
         Label line1 = new Label("Easy: Opponent guesses randomly");
         Label line2 = new Label("Medium: Like easy, but opponent reacts when it gets a hit");
         Label line3 = new Label("Hard: Like medium, but opponent makes initial guesses with strategy");
+        Label line4 = new Label("God-Mode: Prepare to lose!");
 
         line1.setFont(new Font(20));
         line2.setFont(new Font(20));
         line3.setFont(new Font(20));
+        line4.setFont(new Font(20));
         closeB.setFont(new Font(18));
-        qVB.getChildren().addAll(line1,line2,line3,closeB);
+        qVB.getChildren().addAll(line1,line2,line3,line4,closeB);
         qVB.setSpacing(5);
 
         StackPane popStack = new StackPane(qVB);
@@ -171,7 +178,7 @@ class SettingsStage extends Stage {
         this.setScene(new Scene(outerAP));
         this.setResizable(false);
         this.show();
-        smartRadio.requestFocus();
+        mediumRadio.requestFocus();
     }
 }
 
@@ -592,6 +599,9 @@ class GameLoopStage extends Stage {
         // make two player instances
         human = new Player("player", edgeSize);
         armada = new Computer(edgeSize, mode); // will also generate a shipBoard during the object constructor process
+        if(mode == Difficulty.GOD_MODE){
+            armada.setOtherPlayersHashArray(shipBoard.getHashArray());
+        }
 
         // fill player instances with lowerboards and upper boards
         LowerBoard lb = new LowerBoard(new HitOrMissHistoryBoard(edgeSize), shipBoard);

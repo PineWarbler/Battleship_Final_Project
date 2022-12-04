@@ -14,7 +14,7 @@ public class Computer extends Player{
 
     private boolean missFlag;
 
-    private final Difficulty diff;
+    private Difficulty diff;
 
 
     private ArrayList<int[]> searchMatrix;
@@ -68,6 +68,22 @@ public class Computer extends Player{
 
 
         generateShipBoard();
+    }
+
+    /**
+     * used if difficulty mode is "God-mode".  Lets the computer see the positions of the opponent's ships.  Makes a deep copy of the argument hashArray and stores in {@code searchMatrix}.
+     * @param hashArray a 2D array of hashes
+     */
+    public void setOtherPlayersHashArray(int[][] hashArray){
+        this.searchMatrix.clear(); // overwrite existing guesses
+        for(int i = 0; i<hashArray.length; i++){
+            for(int j = 0; j<hashArray[0].length; j++){
+                if(hashArray[i][j]!=ShipBoard.emptyHash){
+                    searchMatrix.add(new int[]{i, j});
+                }
+            }
+        }
+
     }
 
 
@@ -326,7 +342,7 @@ public class Computer extends Player{
 
                 return tempCoord;
             }
-        }else{
+        }else if (diff==Difficulty.HARD){
             if ((consecutiveHits > 1 && consecutiveHits < 6) && missFlag && tempPossibleMoves.size() != 0) {
                 //possibleMoves.remove(lastEndGuess);
 
@@ -410,8 +426,14 @@ public class Computer extends Player{
 
                 return tempCoord;
             }
+        } else { // then difficulty is God-Mode
+            try {
+                return searchMatrix.remove(0);
+            } catch (Exception e){
+                this.diff = Difficulty.EASY; // revert to random guessing
+            }
         }
-
+        return new int[]{0,0}; // dummy return...
     }
 
 
