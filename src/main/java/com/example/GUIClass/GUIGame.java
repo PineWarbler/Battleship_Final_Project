@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -128,15 +130,11 @@ class SettingsStage extends Stage {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-
                 questionPop.show(vb.getScene().getWindow());
-
 
                 closeB.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent1){
-
-
                         questionPop.hide();
 
                     }
@@ -384,6 +382,7 @@ class ShipPlacerStage extends Stage{
         gp.setAlignment(Pos.CENTER);
         hb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(20,20,20,20));
+        VBox.setVgrow(vb,Priority.ALWAYS);
         this.setScene(new Scene(vb));
         this.setMaximized(true);
         this.setTitle("Battleship");

@@ -237,7 +237,7 @@ public class ConsoleDriver {
         Difficulty diff = getDifficulty();
         Computer p2 = new Computer(edgeSize,diff);
 
-        int[] allowedShipLengths = new int[]{ 3, 3, 2};
+        int[] allowedShipLengths = new int[]{ 5,4,3, 3, 2};
 
         // get opening board positions for both players
         p1 = setUp(p1, allowedShipLengths);

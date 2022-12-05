@@ -446,7 +446,9 @@ public class Computer extends Player{
             }
         } else { // then difficulty is God-Mode
             try {
-                return searchMatrix.remove(0);
+                Random rnd = new Random();
+                int ran = rnd.nextInt(searchMatrix.size());
+                return searchMatrix.remove(ran);
             } catch (Exception e){
                 this.diff = Difficulty.EASY; // revert to random guessing
             }
